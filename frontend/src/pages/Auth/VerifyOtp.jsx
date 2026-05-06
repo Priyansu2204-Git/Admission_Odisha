@@ -15,8 +15,15 @@ const VerifyOtp = () => {
     const data = await res.json();
 
     if(data.status==="success"){
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
       alert("Verified");
-      window.location.href="/login";
+      
+      if (data.user.is_admin === 1) {
+        window.location.href = "/dashboard";
+      } else {
+        window.location.href = "/";
+      }
     }else{
       alert(data.message);
     }

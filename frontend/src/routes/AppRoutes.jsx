@@ -11,11 +11,12 @@ import VerifyOtp from "../pages/Auth/VerifyOtp";
 import Field from "../pages/Course/Field";
 import FieldDetail from "../pages/Course/FieldCards/FieldDetail";
 import CourseDetail from "../pages/Course/CourseDetail";
+import Dashboard from "../pages/Dashboard/Dashboard";
 
 const AppRoutes = () => {
   return (
     <Routes>
-      {/* Existing routes (UNCHANGED) */}
+      {/* Existing routes */}
       <Route path="/" element={<MainLayout><Home /></MainLayout>} />
       <Route path="/colleges" element={<MainLayout><CollegeList /></MainLayout>} />
       <Route path="/contact" element={<MainLayout><Contact /></MainLayout>} />
@@ -34,6 +35,9 @@ const AppRoutes = () => {
 
       {/* Course Details */}
       <Route path="/course/:specializationSlug" element={<MainLayout><CourseDetail /></MainLayout>} />
+
+      {/* Dashboard */}
+      <Route path="/dashboard" element={<Dashboard />} />
     </Routes>
   );
 };

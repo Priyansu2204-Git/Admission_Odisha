@@ -8,6 +8,14 @@ const Navbar = () => {
 
   const [open, setOpen] = useState(false);
   const [lang, setLang] = useState("EN");
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const userData = localStorage.getItem("user");
+    if (userData) {
+      setUser(JSON.parse(userData));
+    }
+  }, []);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -77,6 +85,21 @@ const Navbar = () => {
                 )}
               </Link>
             ))}
+            {user?.is_admin === 1 && (
+              <Link
+                to="/dashboard"
+                className={`relative cursor-pointer ${
+                  isActive("/dashboard")
+                    ? "text-[#6C4DF6] font-semibold"
+                    : "hover:text-[#6C4DF6]"
+                }`}
+              >
+                Dashboard
+                {isActive("/dashboard") && (
+                  <span className="absolute left-0 -bottom-[8px] w-full h-[2px] bg-[#6C4DF6]"></span>
+                )}
+              </Link>
+            )}
           </nav>
 
           {/* RIGHT SIDE */}
@@ -115,6 +138,7 @@ const Navbar = () => {
               <button
                 onClick={() => {
                   localStorage.removeItem("token");
+                  localStorage.removeItem("user");
                   window.location.reload();
                 }}
                 className="border border-red-500 text-red-500 px-5 py-2 rounded-md text-sm font-semibold hover:bg-red-50"
@@ -169,6 +193,20 @@ const Navbar = () => {
                 </Link>
               ))}
 
+              {user?.is_admin === 1 && (
+                <Link
+                  to="/dashboard"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`px-6 py-3 text-sm ${
+                    isActive("/dashboard")
+                      ? "text-[#6C4DF6] bg-[#F5F3FF] border-l-4 border-[#6C4DF6]"
+                      : "text-gray-600 hover:bg-gray-50"
+                  }`}
+                >
+                  Dashboard
+                </Link>
+              )}
+
               {/* Divider */}
               <div className="h-px bg-gray-200 my-2 mx-4"></div>
 
@@ -202,6 +240,7 @@ const Navbar = () => {
                     className="w-full border border-red-500 text-red-500 py-2 rounded-md"
                     onClick={() => {
                       localStorage.removeItem("token");
+                      localStorage.removeItem("user");
                       window.location.reload();
                     }}
                   >
