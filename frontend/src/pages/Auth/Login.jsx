@@ -54,8 +54,14 @@ const Login = () => {
 
       if (data.status === "success") {
         localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
         alert("Login Successful");
-        window.location.href = "/";
+        
+        if (data.user.is_admin === 1) {
+          window.location.href = "/dashboard";
+        } else {
+          window.location.href = "/";
+        }
       } else if (data.status === "needs_verification") {
         setShowOtpModal(true);
         setTimer(60); // Reset timer
@@ -86,8 +92,14 @@ const Login = () => {
 
       if (data.status === "success") {
         localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
         alert("OTP Verified! Login Successful.");
-        window.location.href = "/";
+        
+        if (data.user.is_admin === 1) {
+          window.location.href = "/dashboard";
+        } else {
+          window.location.href = "/";
+        }
       } else {
         alert(data.message);
       }

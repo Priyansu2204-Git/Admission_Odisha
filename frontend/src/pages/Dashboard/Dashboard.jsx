@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import API_BASE from "../../config/api";
 import {
   FaBook, FaLayerGroup, FaGraduationCap, FaUniversity,
   FaHome, FaList, FaUsers, FaClock, FaEnvelope,
@@ -11,46 +13,8 @@ import {
   PieChart, Pie, Cell, Legend,
 } from "recharts";
 
-/* ── DATA ── */
-const overviewData = [
-  { day: "16 May", val: 400 },
-  { day: "17 May", val: 850 },
-  { day: "18 May", val: 750 },
-  { day: "19 May", val: 950 },
-  { day: "20 May", val: 1350 },
-  { day: "21 May", val: 1100 },
-  { day: "22 May", val: 1050 },
-];
-
-const topFieldsData = [
-  { name: "Engineering", value: 45, color: "#6366f1" },
-  { name: "Management",  value: 20, color: "#ec4899" },
-  { name: "Science",     value: 15, color: "#22c55e" },
-  { name: "Pharmacy",    value: 10, color: "#f97316" },
-  { name: "Others",      value: 10, color: "#60a5fa" },
-];
-
-const userActivityData = [
-  { name: "New Users",       value: 45, color: "#6366f1" },
-  { name: "Returning Users", value: 35, color: "#ec4899" },
-  { name: "Inactive Users",  value: 20, color: "#f97316" },
-];
-
-const enquiries = [
-  { name: "Rohan Das",      email: "rohan@example.com",  subject: "Admission Help",      date: "22 May 2025", status: "New",         statusColor: "text-indigo-600 bg-indigo-50" },
-  { name: "Priya Mohanty",  email: "priya@example.com",  subject: "Course Information",  date: "22 May 2025", status: "New",         statusColor: "text-indigo-600 bg-indigo-50" },
-  { name: "Sourav Nayak",   email: "sourav@example.com", subject: "College Details",     date: "21 May 2025", status: "In Progress", statusColor: "text-orange-600 bg-orange-50" },
-  { name: "Ananya Behera",  email: "ananya@example.com", subject: "Scholarship Query",   date: "21 May 2025", status: "Resolved",    statusColor: "text-green-600 bg-green-50" },
-  { name: "Bikash Patra",   email: "bikash@example.com", subject: "Admission Process",   date: "20 May 2025", status: "Resolved",    statusColor: "text-green-600 bg-green-50" },
-];
-
-const recentUsers = [
-  { name: "Sanjay Kumar",      email: "sanjay@example.com",    joined: "22 May 2025", status: "Active",   statusColor: "text-green-600 bg-green-50" },
-  { name: "Lipsa Mishra",      email: "lipsa@example.com",     joined: "20 May 2025", status: "Active",   statusColor: "text-green-600 bg-green-50" },
-  { name: "Debashish Jena",    email: "debashish@example.com", joined: "19 May 2025", status: "Active",   statusColor: "text-green-600 bg-green-50" },
-  { name: "Sweta Priyadarshi", email: "sweta@example.com",     joined: "18 May 2025", status: "Active",   statusColor: "text-green-600 bg-green-50" },
-  { name: "Pratik Rout",       email: "pratik@example.com",    joined: "18 May 2025", status: "Inactive", statusColor: "text-red-500 bg-red-50" },
-];
+const topFieldsColors = ["#6366f1", "#ec4899", "#22c55e", "#f97316", "#60a5fa"];
+const userActivityColors = ["#6366f1", "#ec4899", "#f97316"];
 
 const quickActions = [
   { icon: <FaBook />,        label: "Add Field",          color: "bg-indigo-100 text-indigo-600" },
@@ -129,6 +93,60 @@ const DonutLabel = ({ cx, cy, total, label }) => (
 const Dashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeNav, setActiveNav] = useState("Dashboard");
+  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+  const [user, setUser] = useState(null);
+  const [stats, setStats] = useState({
+    totalFields: 0,
+    totalSpecializations: 0,
+    totalCourses: 0,
+    totalColleges: 0,
+    recentEnquiries: [],
+    recentUsers: [],
+    topFields: []
+  });
+
+  useEffect(() => {
+    const userData = localStorage.getItem("user");
+    if (userData) {
+      setUser(JSON.parse(userData));
+    }
+
+    fetch(`${API_BASE}?r=dashboard/stats`)
+      .then(res => res.json())
+      .then(data => {
+        setStats(data);
+      })
+      .catch(err => console.error("Error fetching stats:", err));
+  }, []);
+
+  const overviewData = [
+    { day: "16 May", val: 400 },
+    { day: "17 May", val: 850 },
+    { day: "18 May", val: 750 },
+    { day: "19 May", val: 950 },
+    { day: "20 May", val: 1350 },
+    { day: "21 May", val: 1100 },
+    { day: "22 May", val: 1050 },
+  ];
+
+  const topFieldsData = (stats?.topFields || []).map((f, i) => ({
+    ...f,
+    color: topFieldsColors[i % topFieldsColors.length]
+  }));
+
+  const userActivityData = [
+    { name: "New Users",       value: 45, color: "#6366f1" },
+    { name: "Returning Users", value: 35, color: "#ec4899" },
+    { name: "Inactive Users",  value: 20, color: "#f97316" },
+  ];
+
+  if (!stats) return <div className="p-10 text-center">Loading...</div>;
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    window.location.href = "/login";
+  };
 
   return (
     <div className="flex h-screen bg-gray-50 font-sans overflow-hidden">
@@ -173,10 +191,10 @@ const Dashboard = () => {
 
         {/* View Website */}
         <div className="p-4 border-t border-white/10">
-          <button className="w-full flex items-center justify-between gap-2 bg-white/10 hover:bg-white/15 text-white text-sm font-medium px-4 py-2.5 rounded-xl transition">
+          <Link to="/" className="w-full flex items-center justify-between gap-2 bg-white/10 hover:bg-white/15 text-white text-sm font-medium px-4 py-2.5 rounded-xl transition">
             <span>View Website</span>
             <FaExternalLinkAlt className="text-xs opacity-60" />
-          </button>
+          </Link>
         </div>
       </aside>
 
@@ -204,13 +222,42 @@ const Dashboard = () => {
               <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-red-500 text-white text-[9px] rounded-full flex items-center justify-center font-bold">8</span>
             </div>
             {/* User */}
-            <div className="flex items-center gap-2 cursor-pointer">
-              <div className="w-9 h-9 rounded-full bg-indigo-200 flex items-center justify-center text-indigo-700 font-bold text-sm">AU</div>
-              <div className="leading-tight">
-                <p className="text-sm font-semibold text-gray-800">Admin User</p>
-                <p className="text-xs text-gray-400">Super Admin</p>
+            <div className="relative">
+              <div 
+                className="flex items-center gap-2 cursor-pointer"
+                onClick={() => setUserDropdownOpen(!userDropdownOpen)}
+              >
+                <div className="w-9 h-9 rounded-full bg-indigo-200 flex items-center justify-center text-indigo-700 font-bold text-sm">
+                  {user?.name?.substring(0, 2).toUpperCase() || "AU"}
+                </div>
+                <div className="leading-tight hidden sm:block">
+                  <p className="text-sm font-semibold text-gray-800">{user?.name || "Admin User"}</p>
+                  <p className="text-xs text-gray-400">Super Admin</p>
+                </div>
+                <FaChevronDown className={`text-gray-400 text-xs transition-transform ${userDropdownOpen ? "rotate-180" : ""}`} />
               </div>
-              <FaChevronDown className="text-gray-400 text-xs" />
+
+              {userDropdownOpen && (
+                <>
+                  <div 
+                    className="fixed inset-0 z-10" 
+                    onClick={() => setUserDropdownOpen(false)}
+                  ></div>
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-20">
+                    <div className="px-4 py-2 border-b border-gray-50 mb-1">
+                      <p className="text-xs text-gray-400">Logged in as</p>
+                      <p className="text-sm font-medium text-gray-800 truncate">{user?.email}</p>
+                    </div>
+                    <button 
+                      onClick={handleLogout}
+                      className="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                    >
+                      <FaExternalLinkAlt className="text-xs rotate-180" />
+                      Logout
+                    </button>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </header>
@@ -220,10 +267,10 @@ const Dashboard = () => {
 
           {/* STAT CARDS */}
           <div className="flex gap-5">
-            <StatCard icon={<FaBook />}          iconBg="bg-indigo-500"  lineColor="#818cf8" label="Total Fields"          value="12"  sub="Active Fields" />
-            <StatCard icon={<FaLayerGroup />}    iconBg="bg-pink-500"    lineColor="#f472b6" label="Total Specializations" value="85"  sub="Active Specializations" />
-            <StatCard icon={<FaGraduationCap />} iconBg="bg-green-500"   lineColor="#4ade80" label="Total Courses"         value="230" sub="Active Courses" />
-            <StatCard icon={<FaUniversity />}    iconBg="bg-yellow-500"  lineColor="#fbbf24" label="Total Colleges"        value="156" sub="Active Colleges" />
+            <StatCard icon={<FaBook />}          iconBg="bg-indigo-500"  lineColor="#818cf8" label="Total Fields"          value={stats.totalFields}  sub="Active Fields" />
+            <StatCard icon={<FaLayerGroup />}    iconBg="bg-pink-500"    lineColor="#f472b6" label="Total Specializations" value={stats.totalSpecializations}  sub="Active Specializations" />
+            <StatCard icon={<FaGraduationCap />} iconBg="bg-green-500"   lineColor="#4ade80" label="Total Courses"         value={stats.totalCourses} sub="Active Courses" />
+            <StatCard icon={<FaUniversity />}    iconBg="bg-yellow-500"  lineColor="#fbbf24" label="Total Colleges"        value={stats.totalColleges} sub="Active Colleges" />
           </div>
 
           {/* CHARTS ROW */}
@@ -311,7 +358,7 @@ const Dashboard = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-50">
-                  {enquiries.map((e, i) => (
+                  {stats?.recentEnquiries?.map((e, i) => (
                     <tr key={i} className="hover:bg-gray-50/50 transition">
                       <td className="py-2.5 pr-3 font-medium text-gray-700 whitespace-nowrap">{e.name}</td>
                       <td className="py-2.5 pr-3 text-gray-400 text-xs">{e.email}</td>
@@ -341,7 +388,7 @@ const Dashboard = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-50">
-                  {recentUsers.map((u, i) => (
+                  {stats?.recentUsers?.map((u, i) => (
                     <tr key={i} className="hover:bg-gray-50/50 transition">
                       <td className="py-2.5 pr-3">
                         <div className="flex items-center gap-2">
