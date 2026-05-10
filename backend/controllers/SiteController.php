@@ -18,7 +18,7 @@ class SiteController extends Controller
      */
     public function beforeAction($action)
     {            
-        if (in_array($action->id, ['api-contact', 'api-course-detail', 'api-field-detail'])) {
+        if (in_array($action->id, ['api-contact', 'api-course-detail', 'api-field-detail', 'api-colleges', 'api-college-detail'])) {
             $this->enableCsrfValidation = false;
         }
         return parent::beforeAction($action);
@@ -260,6 +260,52 @@ class SiteController extends Controller
             'data' => [
                 'field' => $field,
                 'specializations' => $specializations
+            ]
+        ];
+    }
+    /**
+     * Returns all colleges.
+     *
+     * @return Response|array
+     */
+    public function actionApiColleges()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $colleges = Yii::$app->db->createCommand("SELECT * FROM colleges WHERE is_status = 1")->queryAll();
+        return [
+            'status' => 'success',
+            'data' => $colleges
+        ];
+    }
+
+    /**
+     * Returns a college's details.
+     *
+     * @return Response|array
+     */
+    public function actionApiCollegeDetail()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $id = Yii::$app->request->get('id');
+        
+        $college = Yii::$app->db->createCommand("SELECT * FROM colleges WHERE id = :id AND is_status = 1", [':id' => $id])->queryOne();
+        
+        if (!$college) {
+            Yii::$app->response->statusCode = 404;
+            return ['status' => 'error', 'message' => 'College not found'];
+        }
+        
+        // Fetch courses offered by this college
+        $sql = "SELECT co.*, cc.id as mapping_id FROM courses co 
+                JOIN college_courses cc ON co.id = cc.course_id 
+                WHERE cc.college_id = :cid AND co.is_status = 1";
+        $courses = Yii::$app->db->createCommand($sql, [':cid' => $id])->queryAll();
+        
+        return [
+            'status' => 'success',
+            'data' => [
+                'college' => $college,
+                'courses' => $courses
             ]
         ];
     }

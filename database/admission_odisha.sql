@@ -33,6 +33,15 @@ CREATE TABLE `colleges` (
   `location` varchar(150) DEFAULT NULL,
   `rating` float DEFAULT NULL,
   `image` varchar(255) DEFAULT NULL,
+  `banner_image` varchar(255) DEFAULT NULL,
+  `description` text DEFAULT NULL,
+  `type` varchar(100) DEFAULT NULL,
+  `established_year` int(11) DEFAULT NULL,
+  `approved_by` varchar(255) DEFAULT NULL,
+  `campus_size` varchar(100) DEFAULT NULL,
+  `website` varchar(255) DEFAULT NULL,
+  `address` text DEFAULT NULL,
+  `rankings` text DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `created_by` int(11) DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
@@ -44,17 +53,17 @@ CREATE TABLE `colleges` (
 -- Dumping data for table `colleges`
 --
 
-INSERT INTO `colleges` (`id`, `name`, `location`, `rating`, `image`, `created_at`, `created_by`, `updated_at`, `updated_by`, `is_status`) VALUES
-(1, 'Odisha University of Technology', 'Bhubaneswar', 4.5, NULL, '2026-05-03 22:56:50', NULL, NULL, NULL, 1),
-(2, 'Kalinga Institute of Medical Sciences', 'Bhubaneswar', 4.8, NULL, '2026-05-03 22:56:50', NULL, NULL, NULL, 1),
-(3, 'National Institute of Technology', 'Rourkela', 4.7, NULL, '2026-05-03 22:56:50', NULL, NULL, NULL, 1),
-(4, 'KIIT University', 'Bhubaneswar', 4.6, NULL, '2026-05-03 22:56:50', NULL, NULL, NULL, 1),
-(5, 'SOA University', 'Bhubaneswar', 4.4, NULL, '2026-05-03 22:56:50', NULL, NULL, NULL, 1),
-(6, 'VSSUT Burla', 'Sambalpur', 4.3, NULL, '2026-05-03 22:56:50', NULL, NULL, NULL, 1),
-(7, 'CET Bhubaneswar', 'Bhubaneswar', 4.1, NULL, '2026-05-03 22:56:50', NULL, NULL, NULL, 1),
-(8, 'Centurion University', 'Bhubaneswar', 4, NULL, '2026-05-03 22:56:50', NULL, NULL, NULL, 1),
-(9, 'Ravenshaw University', 'Cuttack', 4.2, NULL, '2026-05-03 22:56:50', NULL, NULL, NULL, 1),
-(10, 'IIT Bhubaneswar', 'Bhubaneswar', 4.9, NULL, '2026-05-03 22:56:50', NULL, NULL, NULL, 1);
+INSERT INTO `colleges` (`id`, `name`, `location`, `rating`, `image`, `banner_image`, `description`, `type`, `established_year`, `approved_by`, `campus_size`, `website`, `address`, `rankings`, `created_at`, `is_status`) VALUES
+(1, 'Odisha University of Technology', 'Bhubaneswar', 4.5, NULL, 'https://images.unsplash.com/photo-1562774053-701939374585?w=1200&h=400&fit=crop', 'OUTR (formerly CET Bhubaneswar) is a premier technical university in Odisha focused on innovation and technology.', 'State University', 1981, 'UGC, AICTE', '100 Acres', 'www.outr.ac.in', 'Ghatikia, Bhubaneswar, Odisha', 'Premier Technical University', '2026-05-03 22:56:50', 1),
+(2, 'Kalinga Institute of Medical Sciences', 'Bhubaneswar', 4.8, NULL, 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=1200&h=400&fit=crop', 'KIMS provides high-quality medical education and healthcare services with state-of-the-art facilities.', 'Deemed University', 2007, 'NMC, UGC', '50+ Acres', 'www.kims.kiit.ac.in', 'Patia, Bhubaneswar, Odisha', 'Top Medical College in Odisha', '2026-05-03 22:56:50', 1),
+(3, 'National Institute of Technology', 'Rourkela', 4.7, NULL, 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=1200&h=400&fit=crop', 'National Institute of Technology Rourkela is a premier technical institute in India. It was established as Regional Engineering College Rourkela in 1961.', 'Institute of National Importance', 1961, 'Ministry of Education, NIRF Ranked', '1200+ Acres', 'www.nitrkl.ac.in', 'Sector 1, Rourkela, Sundargarh, Odisha - 769008', 'Ranked 16th in NIRF Engineering 2023', '2026-05-03 22:56:50', 1),
+(4, 'KIIT University', 'Bhubaneswar', 4.6, NULL, 'https://images.unsplash.com/photo-1562774053-701939374585?w=1200&h=400&fit=crop', 'KIIT University, Bhubaneswar (Kalinga Institute of Industrial Technology) is a deemed to be university established in 1992. It is recognized as an Institution of Eminence by the Government of India. KIIT is known for its academic excellence, world-class infrastructure, global exposure and excellent placement record.', 'Deemed University', 1992, 'UGC, AICTE, NAAC A++', '100+ Acres', 'www.kiit.ac.in', 'KIIT University, Patia, Bhubaneswar, Khorda, Odisha - 751024', 'Among Top 20 Universities in India (NIRF 2024)', '2026-05-03 22:56:50', 1),
+(5, 'SOA University', 'Bhubaneswar', 4.4, NULL, 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1200&h=400&fit=crop', 'Siksha ''O'' Anusandhan is a private deemed university located in Bhubaneswar. It is known for its high quality research and education.', 'Deemed University', 2007, 'UGC, NAAC A++', '127 Acres', 'www.soa.ac.in', 'Khandagiri, Bhubaneswar, Odisha - 751030', 'Among Top 15 Universities in India (NIRF)', '2026-05-03 22:56:50', 1),
+(6, 'VSSUT Burla', 'Sambalpur', 4.3, NULL, 'https://images.unsplash.com/photo-1562774053-701939374585?w=1200&h=400&fit=crop', 'Veer Surendra Sai University of Technology (VSSUT) is a premier government engineering university. It was established in 1956 as University College of Engineering (UCE) Burla.', 'State University', 1956, 'UGC, AICTE', '184 Acres', 'www.vssut.ac.in', 'Burla, Sambalpur, Odisha - 768018', 'Premier Government Technical University in Odisha', '2026-05-03 22:56:50', 1),
+(7, 'CET Bhubaneswar', 'Bhubaneswar', 4.1, NULL, 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=1200&h=400&fit=crop', 'College of Engineering and Technology, Bhubaneswar is now OUTR. It is a premier government engineering college.', 'Government', 1981, 'UGC, AICTE', '100 Acres', 'www.cet.edu.in', 'Ghatikia, Bhubaneswar, Odisha', 'Leading Government Engineering College', '2026-05-03 22:56:50', 1),
+(8, 'Centurion University', 'Bhubaneswar', 4, NULL, 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=1200&h=400&fit=crop', 'Centurion University is a multi-sector, private state university from Odisha. It focus on skill-based education.', 'Private University', 2010, 'UGC, NAAC A', '100+ Acres', 'www.cutm.ac.in', 'Jatni, Bhubaneswar, Odisha', 'Skill-based Education Pioneer', '2026-05-03 22:56:50', 1),
+(9, 'Ravenshaw University', 'Cuttack', 4.2, NULL, 'https://images.unsplash.com/photo-1562774053-701939374585?w=1200&h=400&fit=crop', 'Ravenshaw University is one of the oldest and most prestigious educational institutions in India, located in Cuttack.', 'State University', 1868, 'UGC, NAAC A', '87 Acres', 'www.ravenshawuniversity.ac.in', 'College Square, Cuttack, Odisha', 'Historic Educational Institution', '2026-05-03 22:56:50', 1),
+(10, 'IIT Bhubaneswar', 'Bhubaneswar', 4.9, NULL, 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=1200&h=400&fit=crop', 'Indian Institute of Technology Bhubaneswar is a public technical university established by the government in 2008.', 'Institute of National Importance', 2008, 'Ministry of Education', '936 Acres', 'www.iitbbs.ac.in', 'Argul, Bhubaneswar, Odisha', 'Top Ranked Engineering Institute', '2026-05-03 22:56:50', 1);
 
 -- --------------------------------------------------------
 
@@ -1546,6 +1555,31 @@ INSERT INTO `user_activity` (`user_id`, `field_id`, `specialization_id`, `course
 (3, 2, 17, NULL, 'Searched Specialization', NOW()),
 (4, 3, 21, NULL, 'Viewed Field', NOW()),
 (5, 1, 1, 1, 'Inquired', NOW());
+
+--
+-- Table structure for table `college_course_specializations`
+--
+
+CREATE TABLE `college_course_specializations` (
+ `id` INT AUTO_INCREMENT PRIMARY KEY,
+
+ `college_id` INT,
+ `course_id` INT,
+ `specialization_id` INT,
+
+ `total_seats` INT,
+
+ `short_desc` TEXT,
+
+ `created_at` DATETIME,
+ `created_by` INT,
+ `updated_at` DATETIME,
+ `updated_by` INT,
+
+ `is_status` TINYINT DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
 
 COMMIT;
 
