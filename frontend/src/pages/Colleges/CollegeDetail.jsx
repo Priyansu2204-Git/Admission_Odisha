@@ -211,24 +211,23 @@ const CollegeDetail = () => {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {courses.length > 0 ? courses.slice(0, 4).map((course, idx) => (
-                  <div key={idx} className="p-6 border border-gray-100 rounded-2xl hover:border-indigo-200 hover:bg-indigo-50/30 transition-all group">
+                {college.courses && college.courses.length > 0 ? college.courses.map((course, idx) => (
+                  <Link 
+                    key={idx} 
+                    to={`/colleges/${college.id}/courses/${course.name}`}
+                    className="p-6 border border-gray-100 rounded-2xl hover:border-indigo-200 hover:bg-indigo-50/30 transition-all group cursor-pointer block"
+                  >
                     <div className="flex items-start justify-between mb-4">
                       <div className="p-3 bg-white rounded-2xl shadow-sm text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white transition-colors duration-300">
                         <GraduationCap size={24} />
                       </div>
                       <div className="text-right">
-                        <span className="text-xs font-bold text-gray-400 block uppercase">{course.degree_level}</span>
                         <span className="text-xs font-medium text-gray-600">{course.duration}</span>
                       </div>
                     </div>
                     <h3 className="text-lg font-bold text-[#071B52] mb-2 group-hover:text-indigo-600 transition-colors">{course.name}</h3>
-                    <p className="text-sm text-gray-500 mb-6 line-clamp-2">Master technical skills in advanced specializations with industry-focused curriculum.</p>
-                    <Link to={`/course/${course.id}`} className="text-indigo-600 text-sm font-bold flex items-center gap-1 group-hover:gap-2 transition-all">
-                      View Details
-                      <ExternalLink size={14} />
-                    </Link>
-                  </div>
+                    <p className="text-sm text-gray-500 line-clamp-2">Click to view available specializations and detailed curriculum.</p>
+                  </Link>
                 )) : (
                   <div className="col-span-full py-10 text-center bg-gray-50 rounded-2xl">
                     <p className="text-gray-500">No courses listed for this college yet.</p>

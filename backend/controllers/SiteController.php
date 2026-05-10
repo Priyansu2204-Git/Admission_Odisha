@@ -294,6 +294,13 @@ class SiteController extends Controller
             Yii::$app->response->statusCode = 404;
             return ['status' => 'error', 'message' => 'College not found'];
         }
+
+        if (!empty($college['courses'])) {
+            $decoded = json_decode($college['courses'], true);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                $college['courses'] = $decoded;
+            }
+        }
         
         // Fetch courses offered by this college
         $sql = "SELECT co.*, cc.id as mapping_id FROM courses co 
@@ -306,6 +313,46 @@ class SiteController extends Controller
             'data' => [
                 'college' => $college,
                 'courses' => $courses
+            ]
+        ];
+    }
+    /**
+     * Returns a college's specializations for a specific general course.
+     *
+     * @return Response|array
+     */
+    public function actionApiCollegeCourseSpecializations()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $collegeId = Yii::$app->request->get('college_id');
+        $courseName = Yii::$app->request->get('course_name');
+        
+        $college = Yii::$app->db->createCommand("SELECT * FROM colleges WHERE id = :id AND is_status = 1", [':id' => $collegeId])->queryOne();
+        
+        if (!$college) {
+            Yii::$app->response->statusCode = 404;
+            return ['status' => 'error', 'message' => 'College not found'];
+        }
+
+        $course = Yii::$app->db->createCommand("SELECT * FROM general_courses WHERE name = :name", [':name' => $courseName])->queryOne();
+        
+        if (!$course) {
+            Yii::$app->response->statusCode = 404;
+            return ['status' => 'error', 'message' => 'Course not found'];
+        }
+        
+        $sql = "SELECT s.name, s.image, ccs.total_seats, ccs.short_desc 
+                FROM college_course_specializations ccs
+                JOIN specializations s ON ccs.specialization_id = s.id
+                WHERE ccs.college_id = :cid AND ccs.course_id = :course_id AND ccs.is_status = 1";
+        $specializations = Yii::$app->db->createCommand($sql, [':cid' => $collegeId, ':course_id' => $course['id']])->queryAll();
+        
+        return [
+            'status' => 'success',
+            'data' => [
+                'college' => $college,
+                'course' => $course,
+                'specializations' => $specializations
             ]
         ];
     }
