@@ -145,7 +145,7 @@ const CollegeCourseSpecializations = () => {
                     <th className="py-5 px-6 rounded-tl-2xl font-bold text-[#071B52] text-sm uppercase tracking-wider">
                       <div className="flex items-center gap-2">
                         <Settings size={18} className="text-indigo-600" />
-                        Branch / Specialization
+                        Branch
                       </div>
                     </th>
                     <th className="py-5 px-6 font-bold text-[#071B52] text-sm uppercase tracking-wider">
@@ -157,7 +157,7 @@ const CollegeCourseSpecializations = () => {
                     <th className="py-5 px-6 rounded-tr-2xl font-bold text-[#071B52] text-sm uppercase tracking-wider">
                       <div className="flex items-center gap-2">
                         <BookOpen size={18} className="text-indigo-600" />
-                        Short Description
+                        Specialization / Short Description
                       </div>
                     </th>
                   </tr>
