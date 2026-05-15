@@ -9,85 +9,41 @@ import Course from "../pages/Course/Course";
 import About from "../pages/About/About";
 import VerifyOtp from "../pages/Auth/VerifyOtp";
 import Field from "../pages/Course/Field";
-import EngAndTech from "../pages/Course/FieldCards/EngAndTech";
+import FieldDetail from "../pages/Course/FieldCards/FieldDetail";
 import CourseDetail from "../pages/Course/CourseDetail";
-
-
+import Dashboard from "../pages/Dashboard/Dashboard";
+import CollegeDetail from "../pages/Colleges/CollegeDetail";
+import CollegeCourseSpecializations from "../pages/Colleges/CollegeCourseSpecializations";
+import { Navigate } from "react-router-dom";
 
 const AppRoutes = () => {
   return (
     <Routes>
-      <Route
-        path="/"
-        element={
-          <MainLayout>
-            <Home />
-          </MainLayout>
-        }
-      />
-      <Route
-  path="/colleges"
-  element={
-    <MainLayout>
-      <CollegeList />
-    </MainLayout>
-  }
-/>
- <Route
-        path="/contact"
-        element={
-          <MainLayout>
-            <Contact />
-          </MainLayout>
-        }
-      />
-       <Route
-        path="/course"
-        element={
-          <MainLayout>
-            <Course />
-          </MainLayout>
-        }
-      />
-       <Route
-        path="/field"
-        element={
-          <MainLayout>
-            <Field />
-          </MainLayout>
-        }
-      />
-       <Route
-        path="/field/engineering"
-        element={
-          <MainLayout>
-            <EngAndTech />
-          </MainLayout>
-        }
-      />
-       <Route
-        path="/about"
-        element={
-          <MainLayout>
-            <About />
-          </MainLayout>
-        }
-      />
-       <Route
-        path="/course/computer-science-engineering"
-        element={
-          <MainLayout>
-            <CourseDetail />
-          </MainLayout>
-        }
-      />
-      
-       <Route path="/login" element={<Login />} />
+      {/* Existing routes */}
+      <Route path="/" element={<MainLayout><Home /></MainLayout>} />
+      <Route path="/colleges" element={<MainLayout><CollegeList /></MainLayout>} />
+      <Route path="/colleges/:id" element={<MainLayout><CollegeDetail /></MainLayout>} />
+      <Route path="/colleges/:collegeId/courses/:courseName" element={<MainLayout><CollegeCourseSpecializations /></MainLayout>} />
+      <Route path="/contact" element={<MainLayout><Contact /></MainLayout>} />
+      <Route path="/streams" element={<Navigate to="/field" replace />} />
+      <Route path="/course" element={<MainLayout><Course /></MainLayout>} />
+          <Route path="/about" element={<MainLayout><About /></MainLayout>} />
 
-      <Route path="/register" element={<Register />} />
+      <Route path="/register" element={<MainLayout><Register /></MainLayout>} />
+
+      {/* Auth routes */}
+      <Route path="/login" element={<Login />} />
       <Route path="/verify-otp" element={<VerifyOtp />} />
 
-      
+      {/* Fields */}
+      <Route path="/field" element={<MainLayout><Field /></MainLayout>} />
+      <Route path="/field/:fieldSlug" element={<MainLayout><FieldDetail /></MainLayout>} />
+
+      {/* Course Details */}
+      <Route path="/course/:specializationSlug" element={<MainLayout><CourseDetail /></MainLayout>} />
+
+      {/* Dashboard */}
+      <Route path="/dashboard" element={<Dashboard />} />
     </Routes>
   );
 };
