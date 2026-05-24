@@ -56,4 +56,198 @@ class DashboardController extends Controller
 
         return $stats;
     }
+
+    public function actionGetFields()
+    {
+        $fields = Yii::$app->db->createCommand("SELECT * FROM fields ORDER BY id DESC")->queryAll();
+        foreach ($fields as &$f) {
+            $f['id'] = (int)$f['id'];
+            $f['description'] = $f['short_desc'];
+            $f['status'] = ((int)$f['is_status'] === 1) ? 'Active' : 'Inactive';
+        }
+        return ['status' => 'success', 'data' => $fields];
+    }
+
+    public function actionCreateField()
+    {
+        $data = Yii::$app->request->getBodyParams();
+        $name = $data['name'] ?? '';
+        $description = $data['description'] ?? '';
+        $status = $data['status'] ?? 'Active';
+        $icon = $data['icon'] ?? 'fa-cogs';
+
+        if (empty($name)) {
+            Yii::$app->response->statusCode = 400;
+            return ['status' => 'error', 'message' => 'Field name is required.'];
+        }
+
+        $is_status = ($status === 'Active') ? 1 : 0;
+
+        Yii::$app->db->createCommand()->insert('fields', [
+            'name' => $name,
+            'short_desc' => $description,
+            'icon' => $icon,
+            'is_status' => $is_status,
+            'created_at' => date('Y-m-d H:i:s'),
+        ])->execute();
+
+        $id = Yii::$app->db->getLastInsertID();
+
+        return [
+            'status' => 'success',
+            'message' => 'Field created successfully.',
+            'data' => [
+                'id' => (int)$id,
+                'name' => $name,
+                'description' => $description,
+                'icon' => $icon,
+                'status' => $status,
+            ]
+        ];
+    }
+
+    public function actionUpdateField()
+    {
+        $data = Yii::$app->request->getBodyParams();
+        $id = $data['id'] ?? null;
+        $name = $data['name'] ?? '';
+        $description = $data['description'] ?? '';
+        $status = $data['status'] ?? 'Active';
+        $icon = $data['icon'] ?? null;
+
+        if (!$id) {
+            Yii::$app->response->statusCode = 400;
+            return ['status' => 'error', 'message' => 'Field ID is required.'];
+        }
+
+        $is_status = ($status === 'Active') ? 1 : 0;
+        
+        $updateData = [
+            'name' => $name,
+            'short_desc' => $description,
+            'is_status' => $is_status,
+            'updated_at' => date('Y-m-d H:i:s'),
+        ];
+        if ($icon !== null) {
+            $updateData['icon'] = $icon;
+        }
+
+        Yii::$app->db->createCommand()->update('fields', $updateData, 'id = :id', [':id' => $id])->execute();
+
+        return ['status' => 'success', 'message' => 'Field updated successfully.'];
+    }
+
+    public function actionDeleteField()
+    {
+        $id = Yii::$app->request->get('id');
+        if (!$id) {
+            $data = Yii::$app->request->getBodyParams();
+            $id = $data['id'] ?? null;
+        }
+
+        if (!$id) {
+            Yii::$app->response->statusCode = 400;
+            return ['status' => 'error', 'message' => 'Field ID is required.'];
+        }
+
+        Yii::$app->db->createCommand()->delete('fields', 'id = :id', [':id' => $id])->execute();
+
+        return ['status' => 'success', 'message' => 'Field deleted successfully.'];
+    }
+    public function actionGetSpecializations()
+    {
+        $specializations = Yii::$app->db->createCommand("
+            SELECT s.*, f.name as field_name 
+            FROM specializations s
+            LEFT JOIN fields f ON s.field_id = f.id
+            ORDER BY s.id ASC
+        ")->queryAll();
+        
+        foreach ($specializations as &$s) {
+            $s['id'] = (int)$s['id'];
+            $s['field_id'] = (int)$s['field_id'];
+            $s['description'] = $s['short_desc'];
+            $s['icon'] = $s['image'];
+            $s['status'] = ((int)$s['is_status'] === 1) ? 'Active' : 'Inactive';
+        }
+        return ['status' => 'success', 'data' => $specializations];
+    }
+
+    public function actionCreateSpecialization()
+    {
+        $data = Yii::$app->request->getBodyParams();
+        $name = $data['name'] ?? '';
+        $field_id = $data['field_id'] ?? null;
+        $description = $data['description'] ?? '';
+        $icon = $data['icon'] ?? 'code';
+        $status = $data['status'] ?? 'Active';
+
+        if (empty($name) || empty($field_id)) {
+            Yii::$app->response->statusCode = 400;
+            return ['status' => 'error', 'message' => 'Name and Field ID are required.'];
+        }
+
+        $is_status = ($status === 'Active') ? 1 : 0;
+
+        Yii::$app->db->createCommand()->insert('specializations', [
+            'name' => $name,
+            'field_id' => $field_id,
+            'short_desc' => $description,
+            'image' => $icon,
+            'is_status' => $is_status,
+            'created_at' => date('Y-m-d H:i:s'),
+        ])->execute();
+
+        return ['status' => 'success', 'message' => 'Specialization created successfully.'];
+    }
+
+    public function actionUpdateSpecialization()
+    {
+        $data = Yii::$app->request->getBodyParams();
+        $id = $data['id'] ?? null;
+        $name = $data['name'] ?? '';
+        $field_id = $data['field_id'] ?? null;
+        $description = $data['description'] ?? '';
+        $icon = $data['icon'] ?? null;
+        $status = $data['status'] ?? 'Active';
+
+        if (!$id || empty($name) || empty($field_id)) {
+            Yii::$app->response->statusCode = 400;
+            return ['status' => 'error', 'message' => 'ID, Name, and Field ID are required.'];
+        }
+
+        $is_status = ($status === 'Active') ? 1 : 0;
+
+        $updateData = [
+            'name' => $name,
+            'field_id' => $field_id,
+            'short_desc' => $description,
+            'is_status' => $is_status,
+            'updated_at' => date('Y-m-d H:i:s'),
+        ];
+        if ($icon !== null) {
+            $updateData['image'] = $icon;
+        }
+
+        Yii::$app->db->createCommand()->update('specializations', $updateData, 'id = :id', [':id' => $id])->execute();
+
+        return ['status' => 'success', 'message' => 'Specialization updated successfully.'];
+    }
+
+    public function actionDeleteSpecialization()
+    {
+        $id = Yii::$app->request->get('id');
+        if (!$id) {
+            $data = Yii::$app->request->getBodyParams();
+            $id = $data['id'] ?? null;
+        }
+
+        if (!$id) {
+            Yii::$app->response->statusCode = 400;
+            return ['status' => 'error', 'message' => 'ID is required.'];
+        }
+
+        Yii::$app->db->createCommand()->delete('specializations', 'id = :id', [':id' => $id])->execute();
+        return ['status' => 'success', 'message' => 'Specialization deleted successfully.'];
+    }
 }
