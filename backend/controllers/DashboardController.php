@@ -160,13 +160,14 @@ class DashboardController extends Controller
             SELECT s.*, f.name as field_name 
             FROM specializations s
             LEFT JOIN fields f ON s.field_id = f.id
-            ORDER BY s.id DESC
+            ORDER BY s.id ASC
         ")->queryAll();
         
         foreach ($specializations as &$s) {
             $s['id'] = (int)$s['id'];
             $s['field_id'] = (int)$s['field_id'];
             $s['description'] = $s['short_desc'];
+            $s['icon'] = $s['image'];
             $s['status'] = ((int)$s['is_status'] === 1) ? 'Active' : 'Inactive';
         }
         return ['status' => 'success', 'data' => $specializations];
@@ -178,6 +179,7 @@ class DashboardController extends Controller
         $name = $data['name'] ?? '';
         $field_id = $data['field_id'] ?? null;
         $description = $data['description'] ?? '';
+        $icon = $data['icon'] ?? 'code';
         $status = $data['status'] ?? 'Active';
 
         if (empty($name) || empty($field_id)) {
@@ -191,6 +193,7 @@ class DashboardController extends Controller
             'name' => $name,
             'field_id' => $field_id,
             'short_desc' => $description,
+            'image' => $icon,
             'is_status' => $is_status,
             'created_at' => date('Y-m-d H:i:s'),
         ])->execute();
@@ -205,6 +208,7 @@ class DashboardController extends Controller
         $name = $data['name'] ?? '';
         $field_id = $data['field_id'] ?? null;
         $description = $data['description'] ?? '';
+        $icon = $data['icon'] ?? null;
         $status = $data['status'] ?? 'Active';
 
         if (!$id || empty($name) || empty($field_id)) {
@@ -214,13 +218,18 @@ class DashboardController extends Controller
 
         $is_status = ($status === 'Active') ? 1 : 0;
 
-        Yii::$app->db->createCommand()->update('specializations', [
+        $updateData = [
             'name' => $name,
             'field_id' => $field_id,
             'short_desc' => $description,
             'is_status' => $is_status,
             'updated_at' => date('Y-m-d H:i:s'),
-        ], 'id = :id', [':id' => $id])->execute();
+        ];
+        if ($icon !== null) {
+            $updateData['image'] = $icon;
+        }
+
+        Yii::$app->db->createCommand()->update('specializations', $updateData, 'id = :id', [':id' => $id])->execute();
 
         return ['status' => 'success', 'message' => 'Specialization updated successfully.'];
     }
