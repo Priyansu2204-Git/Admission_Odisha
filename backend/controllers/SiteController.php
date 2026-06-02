@@ -18,7 +18,7 @@ class SiteController extends Controller
      */
     public function beforeAction($action)
     {            
-        if (in_array($action->id, ['api-contact', 'api-courses', 'api-course-detail', 'api-general-course-detail', 'api-field-detail', 'api-colleges', 'api-college-detail', 'api-college-course-specializations', 'api-submit-enquiry', 'api-get-wishlist', 'api-toggle-wishlist', 'api-get-wishlist-colleges', 'api-clear-wishlist'])) {
+        if (in_array($action->id, ['api-settings', 'api-contact', 'api-courses', 'api-course-detail', 'api-general-course-detail', 'api-field-detail', 'api-colleges', 'api-college-detail', 'api-college-course-specializations', 'api-submit-enquiry', 'api-get-wishlist', 'api-toggle-wishlist', 'api-get-wishlist-colleges', 'api-clear-wishlist'])) {
             $this->enableCsrfValidation = false;
         }
         return parent::beforeAction($action);
@@ -666,5 +666,19 @@ class SiteController extends Controller
         Yii::$app->db->createCommand()->delete('wishlist', ['user_id' => $userLogin['user_id']])->execute();
         
         return ['status' => 'success', 'message' => 'Wishlist cleared'];
+    }
+
+    /**
+     * Returns system settings.
+     */
+    public function actionApiSettings()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $settings = Yii::$app->db->createCommand("SELECT setting_key, setting_value FROM settings WHERE is_status = 1")->queryAll();
+        $data = [];
+        foreach ($settings as $setting) {
+            $data[$setting['setting_key']] = trim($setting['setting_value']);
+        }
+        return ['status' => 'success', 'data' => $data];
     }
 }

@@ -7,6 +7,7 @@ import {
   FaDesktop, FaGraduationCap
 } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
+import { useEnquiry } from "../../context/EnquiryContext";
 
 // Import your image
 import heroImage from "/src/assets/images/course.png";
@@ -15,6 +16,7 @@ const iconMap = { GraduationCap, Briefcase, FlaskConical, Laptop, Pill, Settings
 
 const Course = () => {
   const { t } = useTranslation();
+  const { openGuidance } = useEnquiry();
   const [animatedText, setAnimatedText] = useState("");
   const fullText = t("courseHeroTitle");
   const [searchQuery, setSearchQuery] = useState("");
@@ -395,11 +397,9 @@ const Course = () => {
             <h2 className="text-xl md:text-2xl font-bold mb-1">{t("courseCtaTitle", "Finding the right course?")}</h2>
             <p className="text-white/75 text-sm">{t("courseCtaDesc", "Get personalized guidance from our expert counselors.")}</p>
           </div>
-          <Link to="/register">
-            <button className="relative z-10 bg-white text-indigo-600 px-8 py-3 rounded-xl font-bold hover:shadow-lg transition-all duration-300 hover:scale-105 flex items-center gap-2">
-              {t("courseCtaButton", "Get Free Guidance")} <Zap size={16} />
-            </button>
-          </Link>
+          <button onClick={openGuidance} className="relative z-10 bg-white text-indigo-600 px-8 py-3 rounded-xl font-bold hover:shadow-lg transition-all duration-300 hover:scale-105 flex items-center gap-2">
+            {t("courseCtaButton", "Get Free Guidance")} <Zap size={16} />
+          </button>
           <div className="absolute top-0 right-0 w-56 h-56 bg-white/10 rounded-full -mr-16 -mt-16 blur-3xl pointer-events-none"></div>
         </div>
       </section>

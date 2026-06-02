@@ -1180,7 +1180,7 @@ INSERT INTO `specializations` (`id`, `field_id`, `name`, `short_desc`, `image`, 
 --
 
 CREATE TABLE `specialization_details` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `specialization_id` int(11) DEFAULT NULL,
   `intro` text DEFAULT NULL,
   `eligibility` text DEFAULT NULL,
@@ -1378,8 +1378,8 @@ ALTER TABLE `college_courses`
 --
 -- Indexes for table `courses`
 --
-ALTER TABLE `courses`
-  ADD PRIMARY KEY (`id`);
+-- ALTER TABLE `courses`
+--   ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `fields`
@@ -1396,8 +1396,8 @@ ALTER TABLE `specializations`
 --
 -- Indexes for table `specialization_details`
 --
-ALTER TABLE `specialization_details`
-  ADD PRIMARY KEY (`id`);
+-- ALTER TABLE `specialization_details`
+--   ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `users`
@@ -1431,7 +1431,7 @@ ALTER TABLE `college_courses`
 -- AUTO_INCREMENT for table `courses`
 --
 ALTER TABLE `courses`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=134;
+  AUTO_INCREMENT=134;
 
 --
 -- AUTO_INCREMENT for table `fields`
@@ -1449,7 +1449,7 @@ ALTER TABLE `specializations`
 -- AUTO_INCREMENT for table `specialization_details`
 --
 ALTER TABLE `specialization_details`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=127;
+  AUTO_INCREMENT=127;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -1904,6 +1904,32 @@ INSERT INTO `course_details` (`id`, `slug`, `category`, `short_name`, `full_name
 (17, 'ms', 'Medical', 'MS', 'Master of Surgery', 4.8, 80, '🔪 Surgical Expert', 'A 3-year postgraduate surgical specialty degree for operating and patient care.', 'Master of Surgery (MS) is a postgraduate qualification in surgery. It trains medical graduates in advanced surgical procedures, operations, trauma care, and post-operative recovery.', '₹ 1,00,000 - 5,00,000', '[{"icon": "🦴", "desc": "Perform bone, joint, and ligament surgeries.", "title": "Orthopedic Surgeon"}, {"icon": "🔪", "desc": "Perform abdominal and general surgeries.", "title": "General Surgeon"}, {"icon": "👂", "desc": "Perform surgeries on ear, nose, and throat.", "title": "ENT Specialist"}, {"icon": "🤰", "desc": "Manage high-risk pregnancies and perform C-sections.", "title": "Obstetrician & Gynecologist"}, {"icon": "•••", "desc": "Treat acute emergency surgical cases.", "title": "And Many More"}]', '["MBBS degree from a NMC recognized medical college", "Completion of compulsory rotating internship", "Entrance Exam (NEET PG)"]'),
 (18, 'allied-medical-courses', 'Medical', 'Allied Medical Courses', 'Allied Health Sciences', 4.1, 130, '🧬 Healthcare Support', 'Various 2 to 3-year medical technology programs support laboratory, radiology, and operation theatres.', 'Allied Medical and Health Science courses train technicians and technologists who support the medical ecosystem, from operating diagnostic machinery like MRI to managing blood banks and laboratories.', '₹ 20,000 - 60,000', '[{"icon": "🧪", "desc": "Analyze samples and report diagnostic values.", "title": "Lab Technologist"}, {"icon": "📸", "desc": "Operate X-Ray, CT, and MRI machines.", "title": "Radiology Technician"}, {"icon": "🏥", "desc": "Set up operation theatres and assist surgeons.", "title": "OT Technician"}, {"icon": "🩸", "desc": "Support patients undergoing renal dialysis.", "title": "Dialysis Assistant"}, {"icon": "•••", "desc": "Operate and capture electrocardiogram signals.", "title": "And Many More"}]', '["10+2 with Science stream (PCB / PCM)", "Minimum 45% aggregate marks", "Merit-based admission"]'),
 (19, 'mca', 'Computer Applications', 'MCA', 'Master of Computer Applications', 4.5, 140, '💻 Advanced Software', 'MCA is a 2-year postgraduate program covering advanced computer networks, software engineering, and database systems.', 'The Master of Computer Applications (MCA) program provides advanced instruction in software development, web technologies, database administration, and system design, preparing students for high-level technical roles.', '₹ 40,000 - 1,00,000', '[{"icon": "💻", "desc": "Create robust desktop and enterprise software solutions.", "title": "Software Engineer"}, {"icon": "🛠️", "desc": "Design and evaluate information systems for firms.", "title": "System Analyst"}, {"icon": "🗄️", "desc": "Secure, optimize, and manage enterprise databases.", "title": "Database Administrator"}, {"icon": "🌐", "desc": "Architect full stack websites and web services.", "title": "Web Architect"}, {"icon": "•••", "desc": "Develop secure Android and iOS mobile applications.", "title": "And Many More"}]', '["Graduation in BCA/B.Sc CS/IT or equivalent", "Passed Mathematics at 10+2 or graduation level", "Entrance Exam (OJEE / NIMCET)"]');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `settings`
+--
+
+CREATE TABLE `settings` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `setting_key` VARCHAR(100) UNIQUE,
+  `setting_value` TEXT,
+  `created_at` DATETIME,
+  `created_by` INT,
+  `updated_at` DATETIME,
+  `updated_by` INT,
+  `is_status` TINYINT DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `settings`
+--
+
+INSERT INTO `settings` (`setting_key`, `setting_value`, `created_at`, `is_status`) VALUES
+('support_phone', '+919114422555', NOW(), 1),
+('support_message', ' +919114422555', NOW(), 1),
+('support_email', 'support@admissionodisha.in', NOW(), 1);
 
 COMMIT;
 

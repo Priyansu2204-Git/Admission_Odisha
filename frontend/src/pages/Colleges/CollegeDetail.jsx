@@ -158,7 +158,7 @@ const CollegeDetail = () => {
   const [courses, setCourses] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [successOpen, setSuccessOpen] = useState(false);
-  const { openEnquiry, isOpen, closeEnquiry } = useEnquiry();
+  const { openEnquiry, isOpen, closeEnquiry, openGuidance } = useEnquiry();
   const { wishlist, toggleWishlist } = useContext(AuthContext);
 
   // Listen for successful enquiry submission from EnquiryFloating
@@ -447,7 +447,7 @@ const CollegeDetail = () => {
                 <p className="text-sm font-bold text-[#071B52] mb-4">Have Questions? We're here to help!</p>
                 <div className="flex flex-col gap-3">
                   {/* Call Now — dials phone */}
-                  <a href="tel:+911234567890" className="flex items-center justify-center gap-2 bg-indigo-600 text-white py-3 rounded-xl font-bold hover:bg-indigo-700 transition shadow-md active:scale-95">
+                  <a href="tel:+919114422555" className="flex items-center justify-center gap-2 bg-indigo-600 text-white py-3 rounded-xl font-bold hover:bg-indigo-700 transition shadow-md active:scale-95">
                     <Phone size={18} />
                     Call Now
                   </a>
