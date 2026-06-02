@@ -6,52 +6,82 @@ import {
   FaFlask, FaBalanceScale, FaPencilAlt, FaConciergeBell,
   FaDesktop, FaGraduationCap
 } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
 
 // Import your image
 import heroImage from "/src/assets/images/course.png";
 
-const popularCourses = [
-  { t: "B.Tech",  sub: "Bachelor of Technology",    dur: "4 Years", s: "Engineering & Tech",   category: "Engineering", degree: "Bachelor's Degree", stream: "Technology", ic: "GraduationCap", c: "text-indigo-600",  bg: "bg-indigo-50"  },
-  { t: "MBA",     sub: "Master of Business Admin.", dur: "2 Years", s: "Management",            category: "Management",  degree: "Master's Degree",   stream: "Commerce",    ic: "Briefcase",     c: "text-teal-600",   bg: "bg-teal-50"    },
-  { t: "B.Sc",    sub: "Bachelor of Science",       dur: "3 Years", s: "Science",               category: "Science",     degree: "Bachelor's Degree", stream: "Science",     ic: "FlaskConical",  c: "text-amber-600",  bg: "bg-amber-50"   },
-  { t: "BCA",     sub: "Bachelor of Computer App.", dur: "3 Years", s: "Computer Applications", category: "Engineering", degree: "Bachelor's Degree", stream: "Technology",  ic: "Laptop",        c: "text-pink-600",   bg: "bg-pink-50"    },
-  { t: "B.Pharm", sub: "Bachelor of Pharmacy",      dur: "4 Years", s: "Pharmacy",              category: "Pharmacy",    degree: "Bachelor's Degree", stream: "Science",     ic: "Pill",          c: "text-blue-600",   bg: "bg-blue-50"    },
-  { t: "Diploma", sub: "Polytechnic Diploma",       dur: "3 Years", s: "Various Branches",      category: "Engineering", degree: "Diploma",           stream: "Technology",  ic: "Settings",      c: "text-amber-600",  bg: "bg-amber-50"   },
-  { t: "B.Ed",    sub: "Bachelor of Education",     dur: "2 Years", s: "Education",             category: "Education",   degree: "Bachelor's Degree", stream: "Arts",        ic: "BookOpen",      c: "text-emerald-600",bg: "bg-emerald-50" },
-  { t: "BA",      sub: "Bachelor of Arts",          dur: "3 Years", s: "Arts & Humanities",     category: "Arts",        degree: "Bachelor's Degree", stream: "Arts",        ic: "Palette",       c: "text-purple-600", bg: "bg-purple-50"  },
-];
-
 const iconMap = { GraduationCap, Briefcase, FlaskConical, Laptop, Pill, Settings, BookOpen, Palette };
 
-const fields = [
-  { icon: <FaCog />, color: "bg-[#F3E8FF] text-[#6D28D9]", name: "Engineering &\nTechnology", desc: "Build the future with\ninnovation and technology.", link: "/field/engineering" },
-  { icon: <FaHeartbeat />, color: "bg-[#CCFBF1] text-[#0D9488]", name: "Medical &\nHealth", desc: "Serve society and improve\nlives through healthcare.", link: "/field/medical" },
-  { icon: <FaBriefcase />, color: "bg-[#FFEDD5] text-[#EA580C]", name: "Commerce &\nManagement", desc: "Lead businesses and\ndrive economic growth.", link: "/field/commerce" },
-  { icon: <FaPalette />, color: "bg-[#FCE7F3] text-[#DB2777]", name: "Arts &\nHumanities", desc: "Explore creativity, culture\nand human expression.", link: "/field/arts" },
-  { icon: <FaFlask />, color: "bg-[#DBEAFE] text-[#2563EB]", name: "Science", desc: "Discover, learn and\nexpand the boundaries\nof knowledge.", link: "/field/science" },
-  { icon: <FaBalanceScale />, color: "bg-[#EDE9FE] text-[#6D28D9]", name: "Law", desc: "Uphold justice and\nbuild a career in legal\nprofession.", link: "/field/law" },
-  { icon: <FaPencilAlt />, color: "bg-[#FCE7F3] text-[#DB2777]", name: "Design", desc: "Turn ideas into reality\nwith creativity and\nimagination.", link: "/field/design" },
-  { icon: <FaConciergeBell />, color: "bg-[#FEF3C7] text-[#D97706]", name: "Hospitality", desc: "Create memorable\nexperiences and build\na global career.", link: "/field/hospitality" },
-  { icon: <FaDesktop />, color: "bg-[#CCFBF1] text-[#0D9488]", name: "IT &\nComputer", desc: "Shape the digital world\nwith skills and\ntechnology.", link: "/field/it-computer" },
-  { icon: <FaGraduationCap />, color: "bg-[#EDE9FE] text-[#6D28D9]", name: "Education", desc: "Inspire minds and\nshape the future\nthrough teaching.", link: "/field/education" },
-];
-
-const whyChooseUs = [
-  { t: "Wide Range",      d: "Diverse courses across streams",  ic: <BookOpen size={20} />,    c: "text-indigo-600",  bg: "bg-indigo-50"  },
-  { t: "Top Colleges",    d: "Verified Universities",           ic: <Users size={20} />,       c: "text-teal-600",    bg: "bg-teal-50"    },
-  { t: "100% Trusted",    d: "Verified and secure process",     ic: <ShieldCheck size={20} />, c: "text-amber-600",   bg: "bg-amber-50"   },
-  { t: "Expert Guidance", d: "Help from our counselors",        ic: <Headphones size={20} />,  c: "text-blue-600",    bg: "bg-blue-50"    },
-];
-
 const Course = () => {
+  const { t } = useTranslation();
   const [animatedText, setAnimatedText] = useState("");
-  const fullText = "Explore Courses, Build Your Future";
+  const fullText = t("courseHeroTitle");
   const [searchQuery, setSearchQuery] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("All Categories");
   const [selectedDegree, setSelectedDegree] = useState("All Degrees");
   const [selectedStream, setSelectedStream] = useState("All Streams");
   const courseSectionRef = useRef(null);
+
+  const popularCourses = [
+    { t: "B.Tech",  sub: t("btechSubtitle"),    dur: t("duration4Years"), s: t("fieldEngineeringName").replace("\n", " "),   category: "Engineering", degree: "Bachelor's Degree", stream: "Technology", ic: "GraduationCap", c: "text-indigo-600",  bg: "bg-indigo-50"  },
+    { t: "MBA",     sub: t("mbaSubtitle"), dur: t("duration2Years"), s: t("fieldCommerceName").replace("\n", " "),            category: "Management",  degree: "Master's Degree",   stream: "Commerce",    ic: "Briefcase",     c: "text-teal-600",   bg: "bg-teal-50"    },
+    { t: "B.Sc",    sub: t("bscSubtitle"),       dur: t("duration3Years"), s: t("fieldScienceName"),               category: "Science",     degree: "Bachelor's Degree", stream: "Science",     ic: "FlaskConical",  c: "text-amber-600",  bg: "bg-amber-50"   },
+    { t: "BCA",     sub: t("bcaSubtitle"), dur: t("duration3Years"), s: t("fieldITComputerName").replace("\n", " "), category: "Engineering", degree: "Bachelor's Degree", stream: "Technology",  ic: "Laptop",        c: "text-pink-600",   bg: "bg-pink-50"    },
+    { t: "B.Pharm", sub: t("bpharmSubtitle"),      dur: t("duration4Years"), s: t("categories.pharmacy"),              category: "Pharmacy",    degree: "Bachelor's Degree", stream: "Science",     ic: "Pill",          c: "text-blue-600",   bg: "bg-blue-50"    },
+    { t: "Diploma", sub: t("diplomaSubtitle"),       dur: t("duration3Years"), s: t("fieldEngineeringName").replace("\n", " "),      category: "Engineering", degree: "Diploma",           stream: "Technology",  ic: "Settings",      c: "text-amber-600",  bg: "bg-amber-50"   },
+    { t: "B.Ed",    sub: t("bedSubtitle", "Bachelor of Education"),     dur: t("duration2Years"), s: t("fieldEducationName"),             category: "Education",   degree: "Bachelor's Degree", stream: "Arts",        ic: "BookOpen",      c: "text-emerald-600",bg: "bg-emerald-50" },
+    { t: "BA",      sub: t("baSubtitle", "Bachelor of Arts"),          dur: t("duration3Years"), s: t("fieldArtsName").replace("\n", " "),     category: "Arts",        degree: "Bachelor's Degree", stream: "Arts",        ic: "Palette",       c: "text-purple-600", bg: "bg-purple-50"  },
+  ];
+
+  const fields = [
+    { icon: <FaCog />, color: "bg-[#F3E8FF] text-[#6D28D9]", name: t("fieldEngineeringName"), desc: t("fieldEngineeringDesc"), link: "/field/engineering" },
+    { icon: <FaHeartbeat />, color: "bg-[#CCFBF1] text-[#0D9488]", name: t("fieldMedicalName"), desc: t("fieldMedicalDesc"), link: "/field/medical" },
+    { icon: <FaBriefcase />, color: "bg-[#FFEDD5] text-[#EA580C]", name: t("fieldCommerceName"), desc: t("fieldCommerceDesc"), link: "/field/commerce" },
+    { icon: <FaPalette />, color: "bg-[#FCE7F3] text-[#DB2777]", name: t("fieldArtsName"), desc: t("fieldArtsDesc"), link: "/field/arts" },
+    { icon: <FaFlask />, color: "bg-[#DBEAFE] text-[#2563EB]", name: t("fieldScienceName"), desc: t("fieldScienceDesc"), link: "/field/science" },
+    { icon: <FaBalanceScale />, color: "bg-[#EDE9FE] text-[#6D28D9]", name: t("fieldLawName"), desc: t("fieldLawDesc"), link: "/field/law" },
+    { icon: <FaPencilAlt />, color: "bg-[#FCE7F3] text-[#DB2777]", name: t("fieldDesignName"), desc: t("fieldDesignDesc"), link: "/field/design" },
+    { icon: <FaConciergeBell />, color: "bg-[#FEF3C7] text-[#D97706]", name: t("fieldHospitalityName"), desc: t("fieldHospitalityDesc"), link: "/field/hospitality" },
+    { icon: <FaDesktop />, color: "bg-[#CCFBF1] text-[#0D9488]", name: t("fieldITComputerName"), desc: t("fieldITComputerDesc"), link: "/field/it-computer" },
+    { icon: <FaGraduationCap />, color: "bg-[#EDE9FE] text-[#6D28D9]", name: t("fieldEducationName"), desc: t("fieldEducationDesc"), link: "/field/education" },
+  ];
+
+  const whyChooseUs = [
+    { t: t("courseWhyChooseWideRange"),      d: t("courseWhyChooseWideRangeDesc"),  ic: <BookOpen size={20} />,    c: "text-indigo-600",  bg: "bg-indigo-50"  },
+    { t: t("courseWhyChooseTopColleges"),    d: t("courseWhyChooseTopCollegesDesc"),           ic: <Users size={20} />,       c: "text-teal-600",    bg: "bg-teal-50"    },
+    { t: t("courseWhyChooseTrusted"),    d: t("courseWhyChooseTrustedDesc"),     ic: <ShieldCheck size={20} />, c: "text-amber-600",   bg: "bg-amber-50"   },
+    { t: t("courseWhyChooseExpertGuidance"), d: t("courseWhyChooseExpertGuidanceDesc"),        ic: <Headphones size={20} />,  c: "text-blue-600",    bg: "bg-blue-50"    },
+  ];
+
+  const categories = [
+    { value: "All Categories", labelKey: "categories.all" },
+    { value: "Engineering", labelKey: "categories.engineering" },
+    { value: "Management", labelKey: "categories.management" },
+    { value: "Medical", labelKey: "categories.medical" },
+    { value: "Pharmacy", labelKey: "categories.pharmacy" },
+    { value: "Law", labelKey: "categories.law" },
+    { value: "Arts", labelKey: "categories.arts" },
+    { value: "Science", labelKey: "categories.science" },
+    { value: "Education", labelKey: "categories.education" }
+  ];
+
+  const degrees = [
+    { value: "All Degrees", labelKey: "degrees.all" },
+    { value: "Bachelor's Degree", labelKey: "degrees.bachelor" },
+    { value: "Master's Degree", labelKey: "degrees.master" },
+    { value: "Diploma", labelKey: "degrees.diploma" },
+    { value: "Certificate", labelKey: "degrees.certificate" }
+  ];
+
+  const streams = [
+    { value: "All Streams", labelKey: "streams.all" },
+    { value: "Science", labelKey: "streams.science" },
+    { value: "Commerce", labelKey: "streams.commerce" },
+    { value: "Arts", labelKey: "streams.arts" },
+    { value: "Technology", labelKey: "streams.technology" }
+  ];
 
   useEffect(() => {
     let i = 0;
@@ -60,7 +90,7 @@ const Course = () => {
       else clearInterval(interval);
     }, 50);
     return () => clearInterval(interval);
-  }, []);
+  }, [fullText]);
 
   const filteredCourses = popularCourses.filter(c => {
     const q = searchQuery.toLowerCase();
@@ -73,13 +103,9 @@ const Course = () => {
 
   const handleSearch = () => courseSectionRef.current?.scrollIntoView({ behavior: "smooth" });
 
-  // Get only first 6 fields for desktop and first 4 for mobile
   const desktopFields = fields.slice(0, 6);
   const mobileFields = fields.slice(0, 4);
-  
-  // Get only first 4 popular courses for mobile
   const mobilePopularCourses = popularCourses.slice(0, 4);
-  const desktopPopularCourses = filteredCourses;
 
   return (
     <div className="bg-[#F8F8FC] min-h-screen font-sans pb-16">
@@ -94,18 +120,17 @@ const Course = () => {
                 <span className="animate-pulse text-indigo-400">|</span>
               </h1>
               <p className="text-gray-500 text-base mt-4 max-w-lg">
-                Discover a wide range of courses from top colleges and universities in Odisha.
-                Find the perfect course that matches your career goals.
+                {t("courseHeroDesc")}
               </p>
               <div className="flex flex-col sm:flex-row gap-3 mt-6">
                 <Link to="/colleges">
                   <button className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-xl font-semibold flex items-center gap-2 hover:shadow-lg transition-all duration-300 hover:scale-105">
-                    Explore Colleges <TrendingUp size={16} />
+                    {t("exploreColleges")} <TrendingUp size={16} />
                   </button>
                 </Link>
                 <Link to="/contact">
                   <button className="border-2 border-indigo-600 text-indigo-600 px-6 py-3 rounded-xl font-semibold flex items-center gap-2 hover:bg-indigo-600 hover:text-white transition-all duration-300">
-                    Contact Us <Headphones size={16} />
+                    {t("contactUs")} <Headphones size={16} />
                   </button>
                 </Link>
               </div>
@@ -132,7 +157,7 @@ const Course = () => {
               <Search className="text-gray-400 flex-shrink-0" size={18} />
               <input
                 type="text"
-                placeholder="Search courses by name or subject..."
+                placeholder={t("courseSearchPlaceholder")}
                 value={searchQuery}
                 onChange={(e) => { setSearchQuery(e.target.value); setShowSuggestions(true); }}
                 onFocus={() => setShowSuggestions(true)}
@@ -159,7 +184,7 @@ const Course = () => {
                     c.t.toLowerCase().includes(searchQuery.toLowerCase()) ||
                     c.sub.toLowerCase().includes(searchQuery.toLowerCase())
                   ).length === 0 && (
-                    <div className="px-4 py-3 text-xs text-gray-400 text-center">No courses found</div>
+                    <div className="px-4 py-3 text-xs text-gray-400 text-center">{t("courseNoCoursesFound")}</div>
                   )}
                 </div>
               )}
@@ -168,10 +193,10 @@ const Course = () => {
             {/* Category */}
             <div className="w-full md:w-[20%] border-b md:border-b-0 md:border-r border-gray-200">
               <div className="px-4 py-2">
-                <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Category</label>
+                <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">{t("courseCategoryLabel")}</label>
                 <select value={selectedCategory} onChange={e => setSelectedCategory(e.target.value)}
                   className="w-full py-2 outline-none text-gray-700 bg-transparent text-sm cursor-pointer mt-1 appearance-none">
-                  {["All Categories","Engineering","Management","Medical","Pharmacy","Law","Arts","Science","Education"].map(o => <option key={o}>{o}</option>)}
+                  {categories.map(o => <option key={o.value} value={o.value}>{t(o.labelKey)}</option>)}
                 </select>
               </div>
             </div>
@@ -179,10 +204,10 @@ const Course = () => {
             {/* Degree */}
             <div className="w-full md:w-[20%] border-b md:border-b-0 md:border-r border-gray-200">
               <div className="px-4 py-2">
-                <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Degree</label>
+                <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">{t("courseDegreeLabel")}</label>
                 <select value={selectedDegree} onChange={e => setSelectedDegree(e.target.value)}
                   className="w-full py-2 outline-none text-gray-700 bg-transparent text-sm cursor-pointer mt-1 appearance-none">
-                  {["All Degrees","Bachelor's Degree","Master's Degree","Diploma","Certificate"].map(o => <option key={o}>{o}</option>)}
+                  {degrees.map(o => <option key={o.value} value={o.value}>{t(o.labelKey)}</option>)}
                 </select>
               </div>
             </div>
@@ -190,10 +215,10 @@ const Course = () => {
             {/* Stream */}
             <div className="w-full md:w-[20%]">
               <div className="px-4 py-2">
-                <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Stream</label>
+                <label className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">{t("courseStreamLabel")}</label>
                 <select value={selectedStream} onChange={e => setSelectedStream(e.target.value)}
                   className="w-full py-2 outline-none text-gray-700 bg-transparent text-sm cursor-pointer mt-1 appearance-none">
-                  {["All Streams","Science","Commerce","Arts","Technology"].map(o => <option key={o}>{o}</option>)}
+                  {streams.map(o => <option key={o.value} value={o.value}>{t(o.labelKey)}</option>)}
                 </select>
               </div>
             </div>
@@ -201,13 +226,13 @@ const Course = () => {
 
           <button onClick={handleSearch}
             className="w-full bg-indigo-600 text-white py-3 rounded-b-2xl font-semibold hover:bg-indigo-700 transition-all duration-300 flex items-center justify-center gap-2">
-            <Search size={17} /> Search Courses
+            <Search size={17} /> {t("courseSearchButton")}
           </button>
         </div>
 
         {/* Popular tags */}
         <div className="flex flex-wrap gap-2 justify-center mt-5">
-          <span className="text-xs text-gray-400 font-medium self-center">Popular:</span>
+          <span className="text-xs text-gray-400 font-medium self-center">{t("collegePopularLabel")}</span>
           {["B.Tech","MBA","B.Sc","BCA","B.Pharm","Diploma","M.Tech","LLB"].map(tag => (
             <span key={tag}
               onMouseDown={() => { setSearchQuery(tag); setTimeout(() => courseSectionRef.current?.scrollIntoView({ behavior: "smooth" }), 50); }}
@@ -222,12 +247,12 @@ const Course = () => {
       <section className="max-w-[1280px] mx-auto py-14 px-4 sm:px-6">
         <div className="flex items-center justify-between mb-7">
           <div>
-            <h2 className="text-2xl font-bold text-[#071B52]">Browse by Stream</h2>
-            <p className="text-gray-400 text-xs mt-1">Explore courses by your preferred stream</p>
+            <h2 className="text-2xl font-bold text-[#071B52]">{t("courseBrowseStreamTitle")}</h2>
+            <p className="text-gray-400 text-xs mt-1">{t("courseBrowseStreamDesc")}</p>
           </div>
           <Link to="/field">
             <button className="text-indigo-600 font-semibold text-sm flex items-center gap-1 hover:gap-2 transition-all duration-200">
-              View All <ChevronRight size={15} />
+              {t("courseViewAll")} <ChevronRight size={15} />
             </button>
           </Link>
         </div>
@@ -269,14 +294,14 @@ const Course = () => {
       <section ref={courseSectionRef} className="max-w-[1280px] mx-auto py-8 px-4 sm:px-6 scroll-mt-10">
         <div className="flex items-center justify-between mb-7">
           <div>
-            <h2 className="text-2xl font-bold text-[#071B52]">Popular Courses</h2>
+            <h2 className="text-2xl font-bold text-[#071B52]">{t("popularCourses")}</h2>
             <p className="text-gray-400 text-xs mt-1">
-              Most sought-after courses by students
+              {t("popularCoursesDesc")}
             </p>
           </div>
           <Link to="/courses">
             <button className="text-indigo-600 font-semibold text-sm flex items-center gap-1 hover:gap-2 transition-all duration-200">
-              View All <ChevronRight size={15} />
+              {t("courseViewAll")} <ChevronRight size={15} />
             </button>
           </Link>
         </div>
@@ -294,12 +319,12 @@ const Course = () => {
                 <h4 className="text-lg font-bold text-[#071B52]">{c.t}</h4>
                 <p className="text-xs text-gray-400 mb-3">{c.sub}</p>
                 <div className="space-y-1.5 mb-4">
-                  <p className="text-xs font-medium text-gray-600 bg-gray-50 px-2.5 py-1.5 rounded-lg">{c.dur} Program</p>
+                  <p className="text-xs font-medium text-gray-600 bg-gray-50 px-2.5 py-1.5 rounded-lg">{c.dur} {t("courseProgramLabel", "Program")}</p>
                   <p className="text-xs font-medium text-gray-600 bg-gray-50 px-2.5 py-1.5 rounded-lg">{c.s}</p>
                 </div>
                 <div className="flex justify-between items-center pt-3 border-t border-gray-100">
-                  <span className="text-[10px] font-bold text-gray-400 uppercase">Colleges</span>
-                  <span className="text-indigo-600 font-bold text-xs flex items-center gap-1">Details <ChevronRight size={13} /></span>
+                  <span className="text-[10px] font-bold text-gray-400 uppercase">{t("aboutStatsColleges")}</span>
+                  <span className="text-indigo-600 font-bold text-xs flex items-center gap-1">{t("courseDetailsLabel", "Details")} <ChevronRight size={13} /></span>
                 </div>
               </Link>
             );
@@ -311,11 +336,11 @@ const Course = () => {
           {filteredCourses.length === 0 ? (
             <div className="col-span-full text-center py-16 text-gray-400">
               <Search size={38} className="mx-auto mb-3 opacity-25" />
-              <p className="text-sm font-medium">No courses match your search.</p>
+              <p className="text-sm font-medium">{t("courseNoMatchesFound", "No courses match your search.")}</p>
               <button
                 onClick={() => { setSearchQuery(""); setSelectedCategory("All Categories"); setSelectedDegree("All Degrees"); setSelectedStream("All Streams"); }}
                 className="mt-3 text-xs text-indigo-600 underline">
-                Clear filters
+                {t("courseClearFilters", "Clear filters")}
               </button>
             </div>
           ) : (
@@ -330,12 +355,12 @@ const Course = () => {
                   <h4 className="text-lg font-bold text-[#071B52]">{c.t}</h4>
                   <p className="text-xs text-gray-400 mb-3">{c.sub}</p>
                   <div className="space-y-1.5 mb-4">
-                    <p className="text-xs font-medium text-gray-600 bg-gray-50 px-2.5 py-1.5 rounded-lg">{c.dur} Program</p>
+                    <p className="text-xs font-medium text-gray-600 bg-gray-50 px-2.5 py-1.5 rounded-lg">{c.dur} {t("courseProgramLabel", "Program")}</p>
                     <p className="text-xs font-medium text-gray-600 bg-gray-50 px-2.5 py-1.5 rounded-lg">{c.s}</p>
                   </div>
                   <div className="flex justify-between items-center pt-3 border-t border-gray-100">
-                    <span className="text-[10px] font-bold text-gray-400 uppercase">Colleges</span>
-                    <span className="text-indigo-600 font-bold text-xs flex items-center gap-1">Details <ChevronRight size={13} /></span>
+                    <span className="text-[10px] font-bold text-gray-400 uppercase">{t("aboutStatsColleges")}</span>
+                    <span className="text-indigo-600 font-bold text-xs flex items-center gap-1">{t("courseDetailsLabel", "Details")} <ChevronRight size={13} /></span>
                   </div>
                 </Link>
               );
@@ -347,8 +372,8 @@ const Course = () => {
       {/* WHY CHOOSE US */}
       <section className="max-w-[1280px] mx-auto px-4 sm:px-6 py-14">
         <div className="text-center mb-8">
-          <h2 className="text-2xl font-bold text-[#071B52]">Why Choose Us?</h2>
-          <p className="text-gray-400 text-xs mt-1">We make your course selection journey easier</p>
+          <h2 className="text-2xl font-bold text-[#071B52]">{t("whyChooseUs")}</h2>
+          <p className="text-gray-400 text-xs mt-1">{t("courseWhyChooseUsDesc", "We make your course selection journey easier")}</p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {whyChooseUs.map((w, i) => (
@@ -367,12 +392,12 @@ const Course = () => {
       <section className="max-w-[1280px] mx-auto px-4 sm:px-6 mb-10">
         <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-3xl p-8 md:p-10 flex flex-col md:flex-row items-center justify-between text-white relative overflow-hidden shadow-lg">
           <div className="relative z-10 text-center md:text-left mb-5 md:mb-0">
-            <h2 className="text-xl md:text-2xl font-bold mb-1">Finding the right course?</h2>
-            <p className="text-white/75 text-sm">Get personalized guidance from our expert counselors.</p>
+            <h2 className="text-xl md:text-2xl font-bold mb-1">{t("courseCtaTitle", "Finding the right course?")}</h2>
+            <p className="text-white/75 text-sm">{t("courseCtaDesc", "Get personalized guidance from our expert counselors.")}</p>
           </div>
           <Link to="/register">
             <button className="relative z-10 bg-white text-indigo-600 px-8 py-3 rounded-xl font-bold hover:shadow-lg transition-all duration-300 hover:scale-105 flex items-center gap-2">
-              Get Free Guidance <Zap size={16} />
+              {t("courseCtaButton", "Get Free Guidance")} <Zap size={16} />
             </button>
           </Link>
           <div className="absolute top-0 right-0 w-56 h-56 bg-white/10 rounded-full -mr-16 -mt-16 blur-3xl pointer-events-none"></div>
