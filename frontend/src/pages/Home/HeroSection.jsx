@@ -60,7 +60,7 @@ const HeroSection = () => {
              {t("heroTitle1")}
              <br />
 <span className="bg-gradient-to-r from-primary to-primary-dark bg-clip-text text-transparent">
-  {t("heroTitle2")}
+   {t("heroTitle2")}
 </span>
             </h1>
 

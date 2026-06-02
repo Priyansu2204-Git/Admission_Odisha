@@ -130,7 +130,7 @@ const Contact = () => {
   ];
 
   const infoCards = [
-    { icon: <FaPhone className="text-2xl" style={{ transform: "scaleX(-1)" }} />, title: t("contactCardCall"), text: "+91 1234567890", sub: t("contactCardCallSub"), bg: "bg-blue-500" },
+    { icon: <FaPhone className="text-2xl" style={{ transform: "scaleX(-1)" }} />, title: t("contactCardCall"), text: "+919114422555", sub: t("contactCardCallSub"), bg: "bg-blue-500" },
     { icon: <FaEnvelope className="text-2xl" />, title: t("contactCardEmail"), text: "support@admissionodisha.in", sub: t("contactCardEmailSub"), bg: "bg-purple-500" },
     { icon: <FaMapMarkerAlt className="text-2xl" />, title: t("contactCardVisit"), text: t("contactCardVisitText"), sub: t("contactCardVisitSub"), bg: "bg-pink-500" },
     { icon: <FaClock className="text-2xl" />, title: t("contactCardSupport"), text: t("contactCardSupportText"), sub: t("contactCardSupportSub"), bg: "bg-green-500" },
@@ -284,7 +284,7 @@ const Contact = () => {
                     <FaPhone className="text-white/80" style={{ transform: "scaleX(-1)" }} />
                     <p className="font-semibold">{t("contactSidebarPhone")}</p>
                   </div>
-                  <p className="text-sm text-white/80 pl-8">+91 1234567890</p>
+                  <p className="text-sm text-white/80 pl-8">+919114422555</p>
                 </div>
 
                 <div>
