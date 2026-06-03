@@ -1908,6 +1908,23 @@ INSERT INTO `course_details` (`id`, `slug`, `category`, `short_name`, `full_name
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `enquiries`
+--
+
+CREATE TABLE `enquiries` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `full_name` varchar(255) NOT NULL,
+  `phone` varchar(50) NOT NULL,
+  `courses` text DEFAULT NULL,
+  `colleges` text DEFAULT NULL,
+  `location` varchar(255) DEFAULT NULL,
+  `guidance` varchar(10) DEFAULT 'yes',
+  `status` varchar(50) DEFAULT 'New',
+  `created_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
 -- Table structure for table `settings`
 --
 
