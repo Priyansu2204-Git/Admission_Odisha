@@ -4,6 +4,7 @@ import API_BASE from "../../config/api";
 import AdminField from "./AdminField";
 import AdminSpecializations from "./AdminSpecializations";
 import AdminEnquiry from "./AdminEnquiry";
+import CoursesManagement from "./CoursesManagement";
 import {
   FaBook, FaLayerGroup, FaGraduationCap, FaUniversity,
   FaHome, FaList, FaUsers, FaClock, FaEnvelope,
@@ -442,6 +443,7 @@ const Dashboard = () => {
 
           {activeNav === "Fields" && <AdminField />}
           {activeNav === "Specializations" && <AdminSpecializations />}
+          {activeNav === "Courses" && <CoursesManagement />}
           {activeNav === "Enquiries / Leads" && <AdminEnquiry />}
 
           {/* FOOTER */}
