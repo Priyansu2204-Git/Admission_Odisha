@@ -43,7 +43,6 @@ class AuthController extends Controller
 ")->bindValue(':email', $data['email'])->queryOne();
 
         if ($existing) {
-        if ($existing) {
             return [
                 "status" => "error",
                 "message" => "Email already registered"
