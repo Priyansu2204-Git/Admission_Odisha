@@ -18,7 +18,7 @@ class SiteController extends Controller
      */
     public function beforeAction($action)
     {
-        if (in_array($action->id, ['api-settings', 'api-contact', 'api-courses', 'api-course-detail', 'api-general-course-detail', 'api-field-detail', 'api-colleges', 'api-college-detail', 'api-college-course-specializations', 'api-submit-enquiry', 'api-get-wishlist', 'api-toggle-wishlist', 'api-get-wishlist-colleges', 'api-clear-wishlist'])) {
+        if (in_array($action->id, ['api-settings', 'api-contact', 'api-courses', 'api-course-detail', 'api-general-course-detail', 'api-field-detail', 'api-colleges', 'api-college-detail', 'api-college-course-specializations', 'api-submit-enquiry', 'api-get-wishlist', 'api-add-wishlist', 'api-remove-wishlist', 'api-toggle-wishlist', 'api-get-wishlist-colleges', 'api-clear-wishlist'])) {
             $this->enableCsrfValidation = false;
         }
         return parent::beforeAction($action);
@@ -441,8 +441,8 @@ class SiteController extends Controller
             }
         }
 
-        // Default: return list of colleges
-        $colleges = Yii::$app->db->createCommand("SELECT * FROM colleges WHERE is_status = 1")->queryAll();
+        // Default: return list of colleges from the database
+        $colleges = Yii::$app->db->createCommand("SELECT * FROM colleges")->queryAll();
         return [
             'status' => 'success',
             'data' => $colleges
@@ -589,8 +589,33 @@ class SiteController extends Controller
             return ['status' => 'error', 'message' => 'Invalid token'];
         }
 
-        $wishlist = Yii::$app->db->createCommand("SELECT college_id FROM wishlist WHERE user_id = :uid")
-            ->bindValue(':uid', $userLogin['user_id'])->queryColumn();
+        $wishlist = Yii::$app->db->createCommand("
+    SELECT
+        c.id,
+        c.name,
+        c.location,
+        c.rating,
+        c.image,
+        c.banner_image,
+        c.description,
+        c.type,
+        c.established_year,
+        c.approved_by,
+        c.campus_size,
+        c.website,
+        c.address,
+        c.rankings,
+        c.courses,
+        c.created_at,
+        c.is_status
+    FROM wishlist w
+    INNER JOIN colleges c
+        ON w.college_id = c.id
+    WHERE w.user_id = :uid
+    ORDER BY w.created_at DESC
+")
+            ->bindValue(':uid', $userLogin['user_id'])
+            ->queryAll();
 
         return ['status' => 'success', 'data' => $wishlist];
     }
@@ -640,6 +665,87 @@ class SiteController extends Controller
             ])->execute();
             return ['status' => 'success', 'message' => 'Added to wishlist', 'is_wishlisted' => true];
         }
+    }
+
+    /**
+     * Handles API to add a college to the user's wishlist
+     */
+    public function actionApiAddWishlist()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $token = Yii::$app->request->headers->get('Authorization');
+
+        if (!$token) {
+            Yii::$app->response->statusCode = 401;
+            return ['status' => 'error', 'message' => 'Unauthorized'];
+        }
+
+        $userLogin = Yii::$app->db->createCommand("SELECT user_id FROM user_login WHERE token = :token")
+            ->bindValue(':token', $token)->queryOne();
+
+        if (!$userLogin) {
+            Yii::$app->response->statusCode = 401;
+            return ['status' => 'error', 'message' => 'Invalid token'];
+        }
+
+        $data = json_decode(Yii::$app->request->getRawBody(), true);
+        $collegeId = $data['college_id'] ?? null;
+
+        if (!$collegeId) {
+            Yii::$app->response->statusCode = 400;
+            return ['status' => 'error', 'message' => 'College ID is required'];
+        }
+
+        $existing = Yii::$app->db->createCommand("SELECT * FROM wishlist WHERE user_id = :uid AND college_id = :cid")
+            ->bindValue(':uid', $userLogin['user_id'])
+            ->bindValue(':cid', $collegeId)
+            ->queryOne();
+
+        if ($existing) {
+            return ['status' => 'success', 'message' => 'Already in wishlist', 'is_wishlisted' => true];
+        }
+
+        Yii::$app->db->createCommand()->insert('wishlist', [
+            'user_id' => $userLogin['user_id'],
+            'college_id' => $collegeId,
+            'created_at' => date('Y-m-d H:i:s')
+        ])->execute();
+
+        return ['status' => 'success', 'message' => 'Added to wishlist', 'is_wishlisted' => true];
+    }
+
+    /**
+     * Handles API to remove a college from the user's wishlist
+     */
+    public function actionApiRemoveWishlist()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        $token = Yii::$app->request->headers->get('Authorization');
+
+        if (!$token) {
+            Yii::$app->response->statusCode = 401;
+            return ['status' => 'error', 'message' => 'Unauthorized'];
+        }
+
+        $userLogin = Yii::$app->db->createCommand("SELECT user_id FROM user_login WHERE token = :token")
+            ->bindValue(':token', $token)->queryOne();
+
+        if (!$userLogin) {
+            Yii::$app->response->statusCode = 401;
+            return ['status' => 'error', 'message' => 'Invalid token'];
+        }
+
+        $data = json_decode(Yii::$app->request->getRawBody(), true);
+        $collegeId = $data['college_id'] ?? null;
+
+        if (!$collegeId) {
+            Yii::$app->response->statusCode = 400;
+            return ['status' => 'error', 'message' => 'College ID is required'];
+        }
+
+        Yii::$app->db->createCommand()->delete('wishlist', ['user_id' => $userLogin['user_id'], 'college_id' => $collegeId])->execute();
+
+        return ['status' => 'success', 'message' => 'Removed from wishlist', 'is_wishlisted' => false];
     }
 
     /**
