@@ -39,9 +39,10 @@ class AuthController extends Controller
         }
 
         $existing = Yii::$app->db->createCommand("
-            SELECT * FROM users WHERE email = :email
-        ")->bindValue(':email', $data['email'])->queryOne();
+    SELECT * FROM users WHERE email = :email
+")->bindValue(':email', $data['email'])->queryOne();
 
+        if ($existing) {
         if ($existing) {
             return [
                 "status" => "error",

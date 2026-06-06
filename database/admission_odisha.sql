@@ -7396,7 +7396,7 @@ VALUES (
 --
 
 CREATE TABLE `specialization_details` (
-    `id` int(11) NOT NULL,
+    `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `specialization_id` int(11) DEFAULT NULL,
     `intro` text DEFAULT NULL,
     `eligibility` text DEFAULT NULL,
@@ -8213,7 +8213,8 @@ ALTER TABLE `college_courses` ADD PRIMARY KEY (`id`);
 --
 -- Indexes for table `courses`
 --
-ALTER TABLE `courses` ADD PRIMARY KEY (`id`);
+-- ALTER TABLE `courses`
+--   ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `fields`
@@ -8228,7 +8229,8 @@ ALTER TABLE `specializations` ADD PRIMARY KEY (`id`);
 --
 -- Indexes for table `specialization_details`
 --
-ALTER TABLE `specialization_details` ADD PRIMARY KEY (`id`);
+-- ALTER TABLE `specialization_details`
+--   ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `users`
@@ -8261,9 +8263,7 @@ AUTO_INCREMENT = 46;
 --
 -- AUTO_INCREMENT for table `courses`
 --
-ALTER TABLE `courses`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,
-AUTO_INCREMENT = 134;
+ALTER TABLE `courses` AUTO_INCREMENT = 134;
 
 --
 -- AUTO_INCREMENT for table `fields`
@@ -8282,9 +8282,7 @@ AUTO_INCREMENT = 41;
 --
 -- AUTO_INCREMENT for table `specialization_details`
 --
-ALTER TABLE `specialization_details`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,
-AUTO_INCREMENT = 127;
+ALTER TABLE `specialization_details` AUTO_INCREMENT = 127;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -8355,8 +8353,7 @@ MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `user_login`
 --
-ALTER TABLE `user_login`
-MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `user_login` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Dumping data for table `users`
@@ -10258,8 +10255,7 @@ INSERT INTO
         `career_opportunities`,
         `eligibility`
     )
-VALUES
-    << << << < HEAD (
+VALUES (
         1,
         'btech',
         'Engineering',
@@ -10273,130 +10269,341 @@ VALUES
         '₹ 60,000 - 1,50,000',
         '[{"icon": "💼", "desc": "Design, develop and maintain software applications.", "title": "Software Engineer"}, {"icon": "🌐", "desc": "Build and manage websites and web applications.", "title": "Web Developer"}, {"icon": "🗄️", "desc": "Analyze data and extract valuable insights.", "title": "Data Scientist"}, {"icon": "🛡️", "desc": "Protect systems and data from cyber threats.", "title": "Cyber Security Analyst"}, {"icon": "🤖", "desc": "Work on intelligent systems and machine learning models.", "title": "AI / ML Engineer"}, {"icon": "•••", "desc": "Explore countless career paths in engineering.", "title": "And Many More"}]',
         '["10+2 with Physics, Chemistry and Mathematics (PCM)", "Minimum 50% aggregate", "Entrance Exam (JEE Main / OJEE)", "Seat allocation through counselling"]'
+    ),
+    (
+        2,
+        'mba',
+        'Management',
+        'MBA',
+        'Master of Business Administration',
+        4.5,
+        180,
+        '💎 Top Career Choice',
+        'MBA is a 2-year postgraduate program focused on business administration, leadership, and management skills.',
+        'The Master of Business Administration (MBA) program is designed to develop the skills required for careers in business and management. An MBA can provide significant career benefits, including higher salary potential, promotion opportunities, and a valuable professional network.',
+        '₹ 80,000 - 2,50,000',
+        '[{"icon": "💼", "desc": "Analyze business data to help companies make better decisions.", "title": "Business Analyst"}, {"icon": "📈", "desc": "Lead marketing campaigns and strategies for products.", "title": "Marketing Manager"}, {"icon": "💰", "desc": "Manage company finances, investments, and budgeting.", "title": "Financial Manager"}, {"icon": "👥", "desc": "Oversee recruitment, training, and employee relations.", "title": "HR Manager"}, {"icon": "🚀", "desc": "Plan, execute, and close projects efficiently.", "title": "Project Manager"}, {"icon": "•••", "desc": "Start and manage your own business ventures.", "title": "And Many More"}]',
+        '["Bachelor degree in any discipline", "Minimum 50% marks in graduation", "Entrance Exam (CAT / MAT / OJEE / XAT)", "Group Discussion & Personal Interview (GD/PI)"]'
+    ),
+    (
+        3,
+        'bsc',
+        'Science',
+        'B.Sc',
+        'Bachelor of Science',
+        4.2,
+        120,
+        '🔬 Research Focused',
+        'B.Sc is a 3-year undergraduate program focusing on scientific theories, experiments, and research methodologies.',
+        'Bachelor of Science (B.Sc) programs provide a solid foundation in natural sciences, mathematics, or specialized scientific disciplines. It fosters analytical, problem-solving, and scientific inquiry skills, preparing students for research, industry roles, or advanced studies.',
+        '₹ 15,000 - 50,000',
+        '[{"icon": "🔬", "desc": "Conduct laboratory experiments and support scientific research.", "title": "Research Assistant"}, {"icon": "🧪", "desc": "Operate and maintain laboratory equipment and analyze samples.", "title": "Lab Technician"}, {"icon": "📊", "desc": "Process and analyze scientific or business data.", "title": "Data Analyst"}, {"icon": "🌱", "desc": "Advise on environmental sustainability and compliance.", "title": "Environmental Consultant"}, {"icon": "💡", "desc": "Write research papers, reports, and educational material.", "title": "Scientific Writer"}, {"icon": "•••", "desc": "Teach science subjects in schools or colleges.", "title": "And Many More"}]',
+        '["10+2 with Science stream (PCM / PCB)", "Minimum 45% to 50% aggregate marks", "Merit-based admission or university entrance test"]'
+    ),
+    (
+        4,
+        'bca',
+        'Computer Applications',
+        'BCA',
+        'Bachelor of Computer Applications',
+        4.4,
+        150,
+        '💻 Coding & IT',
+        'BCA is a 3-year undergraduate program covering computer programming, software development, and database systems.',
+        'The Bachelor of Computer Applications (BCA) is a popular degree for students interested in software development, web development, and information technology. It covers database management, software engineering, networking, and programming languages.',
+        '₹ 30,000 - 80,000',
+        '[{"icon": "💻", "desc": "Design and write code for software applications.", "title": "Software Developer"}, {"icon": "🌐", "desc": "Create and maintain responsive websites.", "title": "Web Developer"}, {"icon": "📱", "desc": "Build iOS and Android applications.", "title": "Mobile App Developer"}, {"icon": "🗄️", "desc": "Organize, secure, and manage database systems.", "title": "Database Administrator"}, {"icon": "🛠️", "desc": "Analyze and design IT systems for organizations.", "title": "System Analyst"}, {"icon": "•••", "desc": "Set up and manage computer network infrastructure.", "title": "And Many More"}]',
+        '["10+2 with Mathematics / Computer Science as a subject", "Minimum 45% to 50% aggregate marks", "Direct admission based on merit or entrance exam"]'
+    ),
+    (
+        5,
+        'bpharm',
+        'Pharmacy',
+        'B.Pharm',
+        'Bachelor of Pharmacy',
+        4.3,
+        95,
+        '💊 Healthcare & Medical',
+        'B.Pharm is a 4-year undergraduate program focusing on pharmaceutical sciences, drug design, and healthcare industry.',
+        'The Bachelor of Pharmacy (B.Pharm) is a professional undergraduate degree in the field of pharmacy. It teaches students about manufacturing medicines, dosage formulation, pharmacology, drug analysis, and patient counseling.',
+        '₹ 50,000 - 1,20,000',
+        '[{"icon": "💊", "desc": "Dispense medications and advise patients in pharmacies or hospitals.", "title": "Pharmacist"}, {"icon": "🧪", "desc": "Monitor pharmaceutical safety, quality, and standards compliance.", "title": "Drug Inspector"}, {"icon": "🔬", "desc": "Help research and synthesize new drug compounds.", "title": "Research & Development"}, {"icon": "🏭", "desc": "Verify safety and quality during medicine manufacturing.", "title": "Quality Control Chemist"}, {"icon": "💼", "desc": "Promote and sell pharmaceutical products to doctors.", "title": "Medical Representative"}, {"icon": "•••", "desc": "Oversee clinical trials and gather medical data.", "title": "And Many More"}]',
+        '["10+2 with Physics, Chemistry, and Biology/Mathematics", "Minimum 50% aggregate marks", "Entrance Exam (OJEE / NEET)"]'
+    ),
+    (
+        6,
+        'diploma',
+        'Engineering & Tech',
+        'Diploma',
+        'Polytechnic Diploma',
+        4.1,
+        210,
+        '⚡ Practical & Skill-Based',
+        'A 3-year technical program providing practical engineering skills for early entry into the industry.',
+        'Polytechnic Diploma programs focus on technical skills and hands-on laboratory experiences. It is ideal for students who want a career in engineering fields quickly or plan to enter B.Tech programs through lateral entry.',
+        '₹ 10,000 - 30,000',
+        '[{"icon": "🛠️", "desc": "Assist in engineering design, maintenance, and testing.", "title": "Junior Engineer"}, {"icon": "🏗️", "desc": "Manage physical construction sites and safety protocols.", "title": "Site Supervisor"}, {"icon": "⚙️", "desc": "Repair, install, and calibrate industrial machinery.", "title": "Technician"}, {"icon": "✍️", "desc": "Create detailed technical drawing plans using CAD tools.", "title": "CAD Draftsman"}, {"icon": "🏢", "desc": "Explain technical product benefits to potential clients.", "title": "Technical Sales Executive"}, {"icon": "•••", "desc": "Perform regular checks on factory and facility systems.", "title": "And Many More"}]',
+        '["Class 10th (Matriculation) with Science and Mathematics", "Minimum 35% aggregate marks", "Seat allocation based on merit or Diploma Entrance Exam (DET)"]'
+    ),
+    (
+        7,
+        'bed',
+        'Education',
+        'B.Ed',
+        'Bachelor of Education',
+        4.3,
+        80,
+        '🏫 Teaching Career',
+        'B.Ed is a 2-year professional undergraduate degree that prepares students for teaching careers in schools.',
+        'The Bachelor of Education (B.Ed) is a professional degree that qualifies graduates to teach in secondary and senior secondary schools. The curriculum covers teaching methodology, child development, classroom management, and teaching practice.',
+        '₹ 25,000 - 60,000',
+        '[{"icon": "🏫", "desc": "Teach subjects in primary, secondary, or senior secondary schools.", "title": "School Teacher"}, {"icon": "💡", "desc": "Provide guidance and support to students on academic matters.", "title": "Education Counselor"}, {"icon": "📚", "desc": "Create school curricula, lesson plans, and textbooks.", "title": "Content Developer"}, {"icon": "💻", "desc": "Teach courses and webinars through digital platforms.", "title": "Online Educator"}, {"icon": "✏️", "desc": "Offer individual or group academic assistance.", "title": "Private Tutor"}, {"icon": "•••", "desc": "Manage school activities, schedules, and operations.", "title": "And Many More"}]',
+        '["Bachelor or Master degree in any stream (Science, Commerce, Arts)", "Minimum 50% to 55% aggregate marks in graduation", "State level B.Ed Entrance Exam"]'
+    ),
+    (
+        8,
+        'ba',
+        'Arts & Humanities',
+        'BA',
+        'Bachelor of Arts',
+        4.0,
+        90,
+        '🎨 Creative & Social',
+        'BA is a 3-year undergraduate program focusing on social sciences, literature, history, and languages.',
+        'The Bachelor of Arts (BA) program covers a wide spectrum of subjects in humanities and social sciences. It offers flexibility to specialize in fields like English, History, Economics, Geography, or Sociology, developing critical thinking and communication skills.',
+        '₹ 10,000 - 30,000',
+        '[{"icon": "✍️", "desc": "Write articles, blogs, and marketing copy for businesses.", "title": "Content Writer"}, {"icon": "🏛️", "desc": "Prepare and take exams to work in government administration.", "title": "Civil Services"}, {"icon": "📢", "desc": "Build and manage relationships with public media.", "title": "Public Relations Specialist"}, {"icon": "📰", "desc": "Research, write, and present news stories and reports.", "title": "Journalist"}, {"icon": "🎨", "desc": "Work on art history, design, or gallery coordination.", "title": "Creative Designer"}, {"icon": "•••", "desc": "Help people solve issues in communities.", "title": "And Many More"}]',
+        '["10+2 in any stream (Arts, Science, Commerce)", "Minimum 40% to 45% aggregate marks", "Direct admission based on merit"]'
+    ),
+    (
+        9,
+        'mtech',
+        'Engineering',
+        'M.Tech',
+        'Master of Technology',
+        4.5,
+        140,
+        '🔬 Advanced Tech',
+        'M.Tech is a 2-year postgraduate program offering advanced engineering and research-oriented specializations.',
+        'Master of Technology (M.Tech) is a postgraduate degree program designed to provide in-depth specialization in specific engineering disciplines. It focuses on research, advanced analytics, and technological development.',
+        '₹ 50,000 - 1,20,000',
+        '[{"icon": "💼", "desc": "Design and lead structural and technical system designs.", "title": "Software Architect"}, {"icon": "🔬", "desc": "Conduct research and development in engineering fields.", "title": "Research Scientist"}, {"icon": "⚙️", "desc": "Design and manage complex industrial systems.", "title": "Systems Engineer"}, {"icon": "👥", "desc": "Manage tech teams and project milestones.", "title": "Project Lead"}, {"icon": "•••", "desc": "Explore roles in advanced manufacturing and research.", "title": "And Many More"}]',
+        '["B.Tech/B.E. or equivalent degree", "Minimum 55% aggregate marks", "Entrance Exam (GATE / OJEE)"]'
+    ),
+    (
+        10,
+        'mbbs',
+        'Medical',
+        'MBBS',
+        'Bachelor of Medicine and Bachelor of Surgery',
+        4.9,
+        320,
+        '🩺 Elite Profession',
+        'MBBS is a 5.5-year professional undergraduate medical degree incorporating hospital internships.',
+        'The Bachelor of Medicine and Bachelor of Surgery (MBBS) is the primary professional degree in medicine. It trains students in diagnostic, surgical, and therapeutic medical practices, culminating in a mandatory one-year residency/internship.',
+        '₹ 1,50,000 - 6,00,000',
+        '[{"icon": "🩺", "desc": "Diagnose and treat general health issues in hospitals or clinics.", "title": "General Physician"}, {"icon": "🔪", "desc": "Perform operations and surgical treatments.", "title": "Surgeon"}, {"icon": "🏢", "desc": "Advise hospitals on healthcare policies and management.", "title": "Medical Consultant"}, {"icon": "👶", "desc": "Treat child illnesses and manage child health.", "title": "Pediatrician"}, {"icon": "•••", "desc": "Manage medical departments and healthcare facilities.", "title": "And Many More"}]',
+        '["10+2 with Physics, Chemistry, and Biology (PCB)", "Minimum 50% aggregate marks", "Entrance Exam (NEET UG)"]'
+    ),
+    (
+        11,
+        'msc',
+        'Science',
+        'M.Sc',
+        'Master of Science',
+        4.3,
+        110,
+        '🧪 Research Focused',
+        'M.Sc is a 2-year postgraduate program specializing in scientific theories and practical experiments.',
+        'The Master of Science (M.Sc) is a postgraduate academic degree awarded for studies in science and technology. It focuses on research-oriented advanced theory and practical laboratory work.',
+        '₹ 20,000 - 80,000',
+        '[{"icon": "🔬", "desc": "Conduct laboratory experiments and support research.", "title": "Senior Researcher"}, {"icon": "🧪", "desc": "Manage and operate laboratory environments and teams.", "title": "Lab Director"}, {"icon": "📊", "desc": "Analyze and interpret complex scientific data.", "title": "Data Analyst"}, {"icon": "🏭", "desc": "Oversee standards and quality checking in industries.", "title": "Quality Control Manager"}, {"icon": "•••", "desc": "Teach science subjects in schools or higher institutions.", "title": "And Many More"}]',
+        '["B.Sc or equivalent undergraduate degree in relevant science stream", "Minimum 50% to 55% marks in graduation", "Merit-based or university entrance exam"]'
+    ),
+    (
+        12,
+        'phd',
+        'Science',
+        'Ph.D',
+        'Doctor of Philosophy',
+        4.8,
+        75,
+        '🎓 Highest Degree',
+        'Ph.D is a 3 to 5-year doctoral research program culminating in a thesis defense.',
+        'A Doctor of Philosophy (Ph.D) is the highest academic degree awarded by universities. It requires independent original research, publication of papers, and writing a comprehensive doctoral thesis.',
+        '₹ 30,000 - 1,50,000',
+        '[{"icon": "🏫", "desc": "Teach and conduct academic research in universities.", "title": "Professor"}, {"icon": "🔬", "desc": "Lead research labs and seek grant funding for projects.", "title": "Principal Investigator"}, {"icon": "💡", "desc": "Provide expert advice to corporations or governments.", "title": "Senior Consultant"}, {"icon": "🏢", "desc": "Manage and direct scientific research initiatives.", "title": "Research Director"}, {"icon": "•••", "desc": "Analyze and draft public or private sector policies.", "title": "And Many More"}]',
+        '["Master degree in relevant discipline", "Minimum 55% aggregate marks", "Entrance Exam (UGC NET / CSIR NET / University Written Test)"]'
+    ),
+    (
+        13,
+        'e-master',
+        'Management',
+        'E-Master',
+        'Executive Master Program',
+        4.4,
+        60,
+        '💼 For Professionals',
+        'E-Master is a flexible 1 to 2-year postgraduate program designed for working professionals.',
+        'Executive Master Programs are specialized degrees targeted at working executives seeking advanced professional and technical skills without leaving their careers. Classes are typically online or hybrid.',
+        '₹ 1,50,000 - 3,50,000',
+        '[{"icon": "🏢", "desc": "Lead business units and divisions.", "title": "Director"}, {"icon": "💼", "desc": "Manage high-level operations and corporate teams.", "title": "Senior Manager"}, {"icon": "⚙️", "desc": "Optimize supply chains and business processes.", "title": "Operations Lead"}, {"icon": "💡", "desc": "Provide advisory services for corporate growth.", "title": "Business Consultant"}, {"icon": "•••", "desc": "Hold leadership titles in executive management.", "title": "And Many More"}]',
+        '["Graduation in any discipline", "Minimum 2+ years of relevant professional work experience", "Interview and profile screening"]'
+    ),
+    (
+        14,
+        'btech-mtech-dual-degree',
+        'Engineering',
+        'B.Tech & M.Tech Dual Degree',
+        'Integrated B.Tech and M.Tech',
+        4.5,
+        90,
+        '⚙️ Integrated Path',
+        'A 5-year integrated program awarding both Bachelor\'s and Master\'s degrees in engineering.',
+        'The Integrated Dual Degree program allows students to complete both B.Tech and M.Tech in 5 years, saving one academic year. It offers a seamless transition from foundational to advanced specialization subjects.',
+        '₹ 80,000 - 1,80,000',
+        '[{"icon": "⚙️", "desc": "Manage engineering designs and technical processes.", "title": "Lead Engineer"}, {"icon": "🔬", "desc": "Perform research and innovation tasks in tech firms.", "title": "R&D Specialist"}, {"icon": "📊", "desc": "Analyze tech systems and advise on optimization.", "title": "Systems Analyst"}, {"icon": "💡", "desc": "Advise industries on implementing new technologies.", "title": "Technology Consultant"}, {"icon": "•••", "desc": "Access premium engineering and management roles.", "title": "And Many More"}]',
+        '["10+2 with Physics, Chemistry, and Mathematics (PCM)", "Minimum 50% to 60% aggregate marks", "Entrance Exam (JEE Main / OJEE / Merit)"]'
+    ),
+    (
+        15,
+        'pg-medical',
+        'Medical',
+        'PG (Medical)',
+        'Post Graduate Medical (DM/M.Ch)',
+        4.9,
+        40,
+        '🌟 Super Specialty',
+        'A 3-year advanced residency for medical doctor specialization and super-specialty training.',
+        'Postgraduate Super Specialty Medical programs (DM / M.Ch) represent the highest level of clinical specialization in medicine and surgery, training doctors in specialized organs or disease areas.',
+        '₹ 2,00,000 - 5,00,000',
+        '[{"icon": "🫀", "desc": "Perform complex cardiac procedures and treatments.", "title": "Super Specialist Cardiologist"}, {"icon": "🧠", "desc": "Perform delicate brain and nervous system surgeries.", "title": "Neurosurgeon"}, {"icon": "💧", "desc": "Diagnose and treat urinary tract and kidney issues.", "title": "Urologist"}, {"icon": "🫁", "desc": "Perform digestive tract diagnostic and medical care.", "title": "Gastroenterologist"}, {"icon": "•••", "desc": "Provide specialized medical care for organ failures.", "title": "And Many More"}]',
+        '["MBBS degree from a recognized university", "MD / MS or equivalent DNB qualification", "Entrance Exam (NEET SS)"]'
+    ),
+    (
+        16,
+        'md',
+        'Medical',
+        'MD',
+        'Doctor of Medicine',
+        4.8,
+        85,
+        '🏥 Clinical Specialty',
+        'A 3-year postgraduate medical degree focusing on non-surgical clinical specializations.',
+        'Doctor of Medicine (MD) is a postgraduate degree program in medicine. It trains MBBS graduates in advanced diagnosis, pharmacology, and therapeutic care for specific specialties like pediatrics or internal medicine.',
+        '₹ 1,00,000 - 5,00,000',
+        '[{"icon": "🏥", "desc": "Provide specialized clinical diagnostics and treatment.", "title": "Specialist Physician"}, {"icon": "🩺", "desc": "Consult patients on complex clinical cases.", "title": "Clinical Consultant"}, {"icon": "🧪", "desc": "Research drug actions and patient safety.", "title": "Pharmacologist"}, {"icon": "🏫", "desc": "Teach medical students at medical universities.", "title": "Medical Faculty"}, {"icon": "•••", "desc": "Lead clinical trials and hospital medicine programs.", "title": "And Many More"}]',
+        '["MBBS degree from a NMC recognized medical college", "Completion of compulsory rotating internship", "Entrance Exam (NEET PG)"]'
+    ),
+    (
+        17,
+        'ms',
+        'Medical',
+        'MS',
+        'Master of Surgery',
+        4.8,
+        80,
+        '🔪 Surgical Expert',
+        'A 3-year postgraduate surgical specialty degree for operating and patient care.',
+        'Master of Surgery (MS) is a postgraduate qualification in surgery. It trains medical graduates in advanced surgical procedures, operations, trauma care, and post-operative recovery.',
+        '₹ 1,00,000 - 5,00,000',
+        '[{"icon": "🦴", "desc": "Perform bone, joint, and ligament surgeries.", "title": "Orthopedic Surgeon"}, {"icon": "🔪", "desc": "Perform abdominal and general surgeries.", "title": "General Surgeon"}, {"icon": "👂", "desc": "Perform surgeries on ear, nose, and throat.", "title": "ENT Specialist"}, {"icon": "🤰", "desc": "Manage high-risk pregnancies and perform C-sections.", "title": "Obstetrician & Gynecologist"}, {"icon": "•••", "desc": "Treat acute emergency surgical cases.", "title": "And Many More"}]',
+        '["MBBS degree from a NMC recognized medical college", "Completion of compulsory rotating internship", "Entrance Exam (NEET PG)"]'
+    ),
+    (
+        18,
+        'allied-medical-courses',
+        'Medical',
+        'Allied Medical Courses',
+        'Allied Health Sciences',
+        4.1,
+        130,
+        '🧬 Healthcare Support',
+        'Various 2 to 3-year medical technology programs support laboratory, radiology, and operation theatres.',
+        'Allied Medical and Health Science courses train technicians and technologists who support the medical ecosystem, from operating diagnostic machinery like MRI to managing blood banks and laboratories.',
+        '₹ 20,000 - 60,000',
+        '[{"icon": "🧪", "desc": "Analyze samples and report diagnostic values.", "title": "Lab Technologist"}, {"icon": "📸", "desc": "Operate X-Ray, CT, and MRI machines.", "title": "Radiology Technician"}, {"icon": "🏥", "desc": "Set up operation theatres and assist surgeons.", "title": "OT Technician"}, {"icon": "🩸", "desc": "Support patients undergoing renal dialysis.", "title": "Dialysis Assistant"}, {"icon": "•••", "desc": "Operate and capture electrocardiogram signals.", "title": "And Many More"}]',
+        '["10+2 with Science stream (PCB / PCM)", "Minimum 45% aggregate marks", "Merit-based admission"]'
+    ),
+    (
+        19,
+        'mca',
+        'Computer Applications',
+        'MCA',
+        'Master of Computer Applications',
+        4.5,
+        140,
+        '💻 Advanced Software',
+        'MCA is a 2-year postgraduate program covering advanced computer networks, software engineering, and database systems.',
+        'The Master of Computer Applications (MCA) program provides advanced instruction in software development, web technologies, database administration, and system design, preparing students for high-level technical roles.',
+        '₹ 40,000 - 1,00,000',
+        '[{"icon": "💻", "desc": "Create robust desktop and enterprise software solutions.", "title": "Software Engineer"}, {"icon": "🛠️", "desc": "Design and evaluate information systems for firms.", "title": "System Analyst"}, {"icon": "🗄️", "desc": "Secure, optimize, and manage enterprise databases.", "title": "Database Administrator"}, {"icon": "🌐", "desc": "Architect full stack websites and web services.", "title": "Web Architect"}, {"icon": "•••", "desc": "Develop secure Android and iOS mobile applications.", "title": "And Many More"}]',
+        '["Graduation in BCA/B.Sc CS/IT or equivalent", "Passed Mathematics at 10+2 or graduation level", "Entrance Exam (OJEE / NIMCET)"]'
     );
 
-= = = = = = = (
-    1,
-    'btech',
-    'Engineering',
-    'B.Tech',
-    'Bachelor of Technology',
-    4.6,
-    256,
-    '🔥 Most Popular',
-    'B.Tech is a 4-year undergraduate program that provides engineering skills and technical knowledge in various specializations.',
-    'B.Tech programs prepare students with a strong foundation in engineering principles, problem-solving skills, and practical knowledge to build successful careers in the tech and innovation-driven world.',
-    '₹ 60,000 - 1,50,000',
-    '[{"icon": "💼", "desc": "Design, develop and maintain software applications.", "title": "Software Engineer"}, {"icon": "🌐", "desc": "Build and manage websites and web applications.", "title": "Web Developer"}, {"icon": "🗄️", "desc": "Analyze data and extract valuable insights.", "title": "Data Scientist"}, {"icon": "🛡️", "desc": "Protect systems and data from cyber threats.", "title": "Cyber Security Analyst"}, {"icon": "🤖", "desc": "Work on intelligent systems and machine learning models.", "title": "AI / ML Engineer"}, {"icon": "•••", "desc": "Explore countless career paths in engineering.", "title": "And Many More"}]',
-    '["10+2 with Physics, Chemistry and Mathematics (PCM)", "Minimum 50% aggregate", "Entrance Exam (JEE Main / OJEE)", "Seat allocation through counselling"]'
-),
-(
-    2,
-    'mba',
-    'Management',
-    'MBA',
-    'Master of Business Administration',
-    4.5,
-    180,
-    '💎 Top Career Choice',
-    'MBA is a 2-year postgraduate program focused on business administration, leadership, and management skills.',
-    'The Master of Business Administration (MBA) program is designed to develop the skills required for careers in business and management. An MBA can provide significant career benefits, including higher salary potential, promotion opportunities, and a valuable professional network.',
-    '₹ 80,000 - 2,50,000',
-    '[{"icon": "💼", "desc": "Analyze business data to help companies make better decisions.", "title": "Business Analyst"}, {"icon": "📈", "desc": "Lead marketing campaigns and strategies for products.", "title": "Marketing Manager"}, {"icon": "💰", "desc": "Manage company finances, investments, and budgeting.", "title": "Financial Manager"}, {"icon": "👥", "desc": "Oversee recruitment, training, and employee relations.", "title": "HR Manager"}, {"icon": "🚀", "desc": "Plan, execute, and close projects efficiently.", "title": "Project Manager"}, {"icon": "•••", "desc": "Start and manage your own business ventures.", "title": "And Many More"}]',
-    '["Bachelor degree in any discipline", "Minimum 50% marks in graduation", "Entrance Exam (CAT / MAT / OJEE / XAT)", "Group Discussion & Personal Interview (GD/PI)"]'
-),
-(
-    3,
-    'bsc',
-    'Science',
-    'B.Sc',
-    'Bachelor of Science',
-    4.2,
-    120,
-    '🔬 Research Focused',
-    'B.Sc is a 3-year undergraduate program focusing on scientific theories, experiments, and research methodologies.',
-    'Bachelor of Science (B.Sc) programs provide a solid foundation in natural sciences, mathematics, or specialized scientific disciplines. It fosters analytical, problem-solving, and scientific inquiry skills, preparing students for research, industry roles, or advanced studies.',
-    '₹ 15,000 - 50,000',
-    '[{"icon": "🔬", "desc": "Conduct laboratory experiments and support scientific research.", "title": "Research Assistant"}, {"icon": "🧪", "desc": "Operate and maintain laboratory equipment and analyze samples.", "title": "Lab Technician"}, {"icon": "📊", "desc": "Process and analyze scientific or business data.", "title": "Data Analyst"}, {"icon": "🌱", "desc": "Advise on environmental sustainability and compliance.", "title": "Environmental Consultant"}, {"icon": "💡", "desc": "Write research papers, reports, and educational material.", "title": "Scientific Writer"}, {"icon": "•••", "desc": "Teach science subjects in schools or colleges.", "title": "And Many More"}]',
-    '["10+2 with Science stream (PCM / PCB)", "Minimum 45% to 50% aggregate marks", "Merit-based admission or university entrance test"]'
-),
-(
-    4,
-    'bca',
-    'Computer Applications',
-    'BCA',
-    'Bachelor of Computer Applications',
-    4.4,
-    150,
-    '💻 Coding & IT',
-    'BCA is a 3-year undergraduate program covering computer programming, software development, and database systems.',
-    'The Bachelor of Computer Applications (BCA) is a popular degree for students interested in software development, web development, and information technology. It covers database management, software engineering, networking, and programming languages.',
-    '₹ 30,000 - 80,000',
-    '[{"icon": "💻", "desc": "Design and write code for software applications.", "title": "Software Developer"}, {"icon": "🌐", "desc": "Create and maintain responsive websites.", "title": "Web Developer"}, {"icon": "📱", "desc": "Build iOS and Android applications.", "title": "Mobile App Developer"}, {"icon": "🗄️", "desc": "Organize, secure, and manage database systems.", "title": "Database Administrator"}, {"icon": "🛠️", "desc": "Analyze and design IT systems for organizations.", "title": "System Analyst"}, {"icon": "•••", "desc": "Set up and manage computer network infrastructure.", "title": "And Many More"}]',
-    '["10+2 with Mathematics / Computer Science as a subject", "Minimum 45% to 50% aggregate marks", "Direct admission based on merit or entrance exam"]'
-),
-(
-    5,
-    'bpharm',
-    'Pharmacy',
-    'B.Pharm',
-    'Bachelor of Pharmacy',
-    4.3,
-    95,
-    '💊 Healthcare & Medical',
-    'B.Pharm is a 4-year undergraduate program focusing on pharmaceutical sciences, drug design, and healthcare industry.',
-    'The Bachelor of Pharmacy (B.Pharm) is a professional undergraduate degree in the field of pharmacy. It teaches students about manufacturing medicines, dosage formulation, pharmacology, drug analysis, and patient counseling.',
-    '₹ 50,000 - 1,20,000',
-    '[{"icon": "💊", "desc": "Dispense medications and advise patients in pharmacies or hospitals.", "title": "Pharmacist"}, {"icon": "🧪", "desc": "Monitor pharmaceutical safety, quality, and standards compliance.", "title": "Drug Inspector"}, {"icon": "🔬", "desc": "Help research and synthesize new drug compounds.", "title": "Research & Development"}, {"icon": "🏭", "desc": "Verify safety and quality during medicine manufacturing.", "title": "Quality Control Chemist"}, {"icon": "💼", "desc": "Promote and sell pharmaceutical products to doctors.", "title": "Medical Representative"}, {"icon": "•••", "desc": "Oversee clinical trials and gather medical data.", "title": "And Many More"}]',
-    '["10+2 with Physics, Chemistry, and Biology/Mathematics", "Minimum 50% aggregate marks", "Entrance Exam (OJEE / NEET)"]'
-),
-(
-    6,
-    'diploma',
-    'Engineering & Tech',
-    'Diploma',
-    'Polytechnic Diploma',
-    4.1,
-    210,
-    '⚡ Practical & Skill-Based',
-    'A 3-year technical program providing practical engineering skills for early entry into the industry.',
-    'Polytechnic Diploma programs focus on technical skills and hands-on laboratory experiences. It is ideal for students who want a career in engineering fields quickly or plan to enter B.Tech programs through lateral entry.',
-    '₹ 10,000 - 30,000',
-    '[{"icon": "🛠️", "desc": "Assist in engineering design, maintenance, and testing.", "title": "Junior Engineer"}, {"icon": "🏗️", "desc": "Manage physical construction sites and safety protocols.", "title": "Site Supervisor"}, {"icon": "⚙️", "desc": "Repair, install, and calibrate industrial machinery.", "title": "Technician"}, {"icon": "✍️", "desc": "Create detailed technical drawing plans using CAD tools.", "title": "CAD Draftsman"}, {"icon": "🏢", "desc": "Explain technical product benefits to potential clients.", "title": "Technical Sales Executive"}, {"icon": "•••", "desc": "Perform regular checks on factory and facility systems.", "title": "And Many More"}]',
-    '["Class 10th (Matriculation) with Science and Mathematics", "Minimum 35% aggregate marks", "Seat allocation based on merit or Diploma Entrance Exam (DET)"]'
-),
-(
-    7,
-    'bed',
-    'Education',
-    'B.Ed',
-    'Bachelor of Education',
-    4.3,
-    80,
-    '🏫 Teaching Career',
-    'B.Ed is a 2-year professional undergraduate degree that prepares students for teaching careers in schools.',
-    'The Bachelor of Education (B.Ed) is a professional degree that qualifies graduates to teach in secondary and senior secondary schools. The curriculum covers teaching methodology, child development, classroom management, and teaching practice.',
-    '₹ 25,000 - 60,000',
-    '[{"icon": "🏫", "desc": "Teach subjects in primary, secondary, or senior secondary schools.", "title": "School Teacher"}, {"icon": "💡", "desc": "Provide guidance and support to students on academic matters.", "title": "Education Counselor"}, {"icon": "📚", "desc": "Create school curricula, lesson plans, and textbooks.", "title": "Content Developer"}, {"icon": "💻", "desc": "Teach courses and webinars through digital platforms.", "title": "Online Educator"}, {"icon": "✏️", "desc": "Offer individual or group academic assistance.", "title": "Private Tutor"}, {"icon": "•••", "desc": "Manage school activities, schedules, and operations.", "title": "And Many More"}]',
-    '["Bachelor or Master degree in any stream (Science, Commerce, Arts)", "Minimum 50% to 55% aggregate marks in graduation", "State level B.Ed Entrance Exam"]'
-),
-(
-    8,
-    'ba',
-    'Arts & Humanities',
-    'BA',
-    'Bachelor of Arts',
-    4.0,
-    90,
-    '🎨 Creative & Social',
-    'BA is a 3-year undergraduate program focusing on social sciences, literature, history, and languages.',
-    'The Bachelor of Arts (BA) program covers a wide spectrum of subjects in humanities and social sciences. It offers flexibility to specialize in fields like English, History, Economics, Geography, or Sociology, developing critical thinking and communication skills.',
-    '₹ 10,000 - 30,000',
-    '[{"icon": "✍️", "desc": "Write articles, blogs, and marketing copy for businesses.", "title": "Content Writer"}, {"icon": "🏛️", "desc": "Prepare and take exams to work in government administration.", "title": "Civil Services"}, {"icon": "📢", "desc": "Build and manage relationships with public media.", "title": "Public Relations Specialist"}, {"icon": "📰", "desc": "Research, write, and present news stories and reports.", "title": "Journalist"}, {"icon": "🎨", "desc": "Work on art history, design, or gallery coordination.", "title": "Creative Designer"}, {"icon": "•••", "desc": "Help people solve issues in communities.", "title": "And Many More"}]',
-    '["10+2 in any stream (Arts, Science, Commerce)", "Minimum 40% to 45% aggregate marks", "Direct admission based on merit"]'
-);
+-- --------------------------------------------------------
 
->> >> >> > 07e803e8b6dd5d971078c5c87344734253eadc1e
+--
+-- Table structure for table `enquiries`
+--
+
+CREATE TABLE `enquiries` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `full_name` varchar(255) NOT NULL,
+    `phone` varchar(50) NOT NULL,
+    `courses` text DEFAULT NULL,
+    `colleges` text DEFAULT NULL,
+    `location` varchar(255) DEFAULT NULL,
+    `guidance` varchar(10) DEFAULT 'yes',
+    `status` varchar(50) DEFAULT 'New',
+    `created_at` datetime DEFAULT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
+
+--
+-- Table structure for table `settings`
+--
+
+CREATE TABLE `settings` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `setting_key` VARCHAR(100) UNIQUE,
+    `setting_value` TEXT,
+    `created_at` DATETIME,
+    `created_by` INT,
+    `updated_at` DATETIME,
+    `updated_by` INT,
+    `is_status` TINYINT DEFAULT 1
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci;
+
+--
+-- Dumping data for table `settings`
+--
+
+INSERT INTO
+    `settings` (
+        `setting_key`,
+        `setting_value`,
+        `created_at`,
+        `is_status`
+    )
+VALUES (
+        'support_phone',
+        '+919114422555',
+        NOW(),
+        1
+    ),
+    (
+        'support_message',
+        ' +919114422555',
+        NOW(),
+        1
+    ),
+    (
+        'support_email',
+        'support@admissionodisha.in',
+        NOW(),
+        1
+    );
 
 COMMIT;
 
