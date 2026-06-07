@@ -313,6 +313,53 @@ class AuthController extends Controller
     }
 
     // =========================
+    // GET PROFILE
+    // =========================
+    public function actionGetProfile()
+    {
+        $token = Yii::$app->request->headers->get('Authorization');
+
+        if (!$token) {
+            return [
+                "status" => "error",
+                "message" => "Token missing"
+            ];
+        }
+
+        $userLogin = Yii::$app->db->createCommand("SELECT user_id FROM user_login WHERE token = :token")
+            ->bindValue(':token', $token)->queryOne();
+
+        if (!$userLogin) {
+            return [
+                "status" => "error",
+                "message" => "Invalid or expired session"
+            ];
+        }
+
+        $user = \app\models\User::findOne($userLogin['user_id']);
+        if (!$user) {
+            return [
+                "status" => "error",
+                "message" => "User not found"
+            ];
+        }
+
+        return [
+            "status" => "success",
+            "user" => [
+                "id" => $user->id,
+                "name" => $user->name,
+                "email" => $user->email,
+                "phone" => $user->phone,
+                "city" => $user->city,
+                "gender" => $user->gender,
+                "dob" => $user->dob,
+                "is_admin" => (int) $user->is_admin
+            ]
+        ];
+    }
+
+    // =========================
     // UPDATE PROFILE
     // =========================
     public function actionUpdateProfile()

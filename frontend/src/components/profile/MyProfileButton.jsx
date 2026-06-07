@@ -24,18 +24,45 @@ const MyProfileButton = ({ onClick, variant = "desktop" }) => {
   const [successMsg, setSuccessMsg] = useState("");
 
   useEffect(() => {
-    const userData = localStorage.getItem("user");
-    if (userData) {
-      const parsed = JSON.parse(userData);
-      setUser(parsed);
-      setEditForm({
-        name: parsed.name || "",
-        email: parsed.email || "",
-        phone: parsed.phone || "",
-        city: parsed.city || "",
-        gender: parsed.gender || "",
-        dob: parsed.dob || ""
-      });
+    if (isOpen) {
+      const userData = localStorage.getItem("user");
+      if (userData) {
+        const parsed = JSON.parse(userData);
+        setUser(parsed);
+        setEditForm({
+          name: parsed.name || "",
+          email: parsed.email || "",
+          phone: parsed.phone || "",
+          city: parsed.city || "",
+          gender: parsed.gender || "",
+          dob: parsed.dob || ""
+        });
+      }
+
+      const token = localStorage.getItem("token");
+      if (token) {
+        fetch(`${API_BASE}?r=auth/get-profile`, {
+          headers: {
+            "Authorization": token
+          }
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.status === "success" && data.user) {
+              localStorage.setItem("user", JSON.stringify(data.user));
+              setUser(data.user);
+              setEditForm({
+                name: data.user.name || "",
+                email: data.user.email || "",
+                phone: data.user.phone || "",
+                city: data.user.city || "",
+                gender: data.user.gender || "",
+                dob: data.user.dob || ""
+              });
+            }
+          })
+          .catch((err) => console.error("Error fetching profile:", err));
+      }
     }
   }, [isOpen]);
 
