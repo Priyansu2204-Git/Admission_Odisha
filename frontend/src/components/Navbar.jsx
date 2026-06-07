@@ -16,7 +16,7 @@ const Navbar = () => {
   );
 
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [settingsTab, setSettingsTab] = useState("password"); // "password", "language", "support"
+  const [settingsTab, setSettingsTab] = useState("profile"); // "profile", "password", "language", "support"
 
   // Password change states
   const [currentPassword, setCurrentPassword] = useState("");
@@ -270,9 +270,21 @@ const Navbar = () => {
                     <button
                       onClick={() => {
                         setProfileOpen(false);
+                        setSettingsTab("profile");
                         setSettingsOpen(true);
                       }}
                       className="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-all duration-200"
+                    >
+                      <FaUser className="text-xs text-gray-500" />
+                      My Profile
+                    </button>
+                    <button
+                      onClick={() => {
+                        setProfileOpen(false);
+                        setSettingsTab("password");
+                        setSettingsOpen(true);
+                      }}
+                      className="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 border-t border-gray-100 transition-all duration-200"
                     >
                       <FaCog className="text-xs text-gray-500" />
                       Settings
@@ -402,6 +414,18 @@ const Navbar = () => {
                       className="w-full border border-gray-300 text-gray-700 py-2 rounded-md hover:bg-gray-50 transition-all duration-300 flex items-center justify-center gap-2"
                       onClick={() => {
                         setMobileMenuOpen(false);
+                        setSettingsTab("profile");
+                        setSettingsOpen(true);
+                      }}
+                    >
+                      <FaUser className="text-sm text-gray-500" />
+                      My Profile
+                    </button>
+                    <button
+                      className="w-full border border-gray-300 text-gray-700 py-2 rounded-md hover:bg-gray-50 transition-all duration-300 flex items-center justify-center gap-2"
+                      onClick={() => {
+                        setMobileMenuOpen(false);
+                        setSettingsTab("password");
                         setSettingsOpen(true);
                       }}
                     >
@@ -472,6 +496,18 @@ const Navbar = () => {
                 <div className="space-y-2">
                   <button
                     onClick={() => {
+                      setSettingsTab("profile");
+                    }}
+                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left text-sm font-semibold transition-all duration-200 ${settingsTab === "profile"
+                        ? "bg-[#6C4DF6] text-white shadow-md"
+                        : "text-gray-600 hover:bg-gray-100"
+                      }`}
+                  >
+                    <FaUser className="text-sm" />
+                    My Profile
+                  </button>
+                  <button
+                    onClick={() => {
                       setSettingsTab("password");
                       setPasswordError("");
                       setPasswordSuccess("");
@@ -523,6 +559,59 @@ const Navbar = () => {
               >
                 <FaTimes className="text-lg" />
               </button>
+
+              {settingsTab === "profile" && (
+                <div>
+                  <h4 className="text-xl font-bold text-gray-800 mb-2">My Profile</h4>
+                  <p className="text-sm text-gray-500 mb-6">Your personal account information.</p>
+
+                  <div className="flex flex-col items-center mb-6 bg-gradient-to-r from-purple-50 to-indigo-50 p-6 rounded-2xl border border-indigo-100/30">
+                    <div className="relative mb-3">
+                      {user?.profile_photo ? (
+                        <img
+                          src={`http://localhost/backend/${user.profile_photo}`}
+                          alt="profile"
+                          className="w-20 h-20 rounded-full object-cover border-4 border-white shadow-md"
+                        />
+                      ) : (
+                        <div className="w-20 h-20 rounded-full bg-purple-600 text-white flex items-center justify-center font-bold text-2xl uppercase shadow-md">
+                          {user?.name
+                            ? user.name
+                              .split(" ")
+                              .map((word) => word.charAt(0))
+                              .join("")
+                              .slice(0, 2)
+                            : user?.email?.charAt(0)}
+                        </div>
+                      )}
+                    </div>
+                    <h5 className="text-lg font-bold text-gray-800">{user?.name || "User"}</h5>
+                    <span className="mt-1 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-100 text-indigo-700">
+                      {user?.is_admin === 1 ? "Administrator" : "Candidate / Student"}
+                    </span>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="flex flex-col p-4 rounded-xl bg-gray-50 border border-gray-100">
+                      <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Full Name</p>
+                      <p className="text-sm font-semibold text-gray-800">{user?.name || "N/A"}</p>
+                    </div>
+
+                    <div className="flex flex-col p-4 rounded-xl bg-gray-50 border border-gray-100">
+                      <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Email Address</p>
+                      <p className="text-sm font-semibold text-gray-800">{user?.email || "N/A"}</p>
+                    </div>
+
+                    <div className="flex flex-col p-4 rounded-xl bg-gray-50 border border-gray-100">
+                      <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Account Status</p>
+                      <div className="flex items-center gap-2 mt-1">
+                        <span className="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse"></span>
+                        <p className="text-sm font-semibold text-gray-800">Active</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {settingsTab === "password" && (
                 <div>
