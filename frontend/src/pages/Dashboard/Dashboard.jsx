@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import API_BASE from "../../config/api";
 import AdminField from "./AdminField";
 import AdminSpecializations from "./AdminSpecializations";
+import AdminEnquiry from "./AdminEnquiry";
+import CoursesManagement from "./CoursesManagement";
 import AdminColleges from "./AdminColleges";
 import {
   FaBook,
@@ -635,13 +637,34 @@ const Dashboard = () => {
                 <h2 className="font-bold text-gray-800 mb-4">Quick Actions</h2>
                 <div className="grid grid-cols-8 gap-4">
                   {quickActions.map((a, i) => (
-                    <button
-                      key={i}
-                      onClick={() => {
-                        if (a.label === "Add Field") {
-                          setActiveNav("Fields");
-                        }
-                      }}
+  <button
+    key={i}
+    onClick={() => {
+      switch (a.label) {
+        case "Add Field":
+          setActiveNav("Fields");
+          break;
+
+        case "Add Specialization":
+          setActiveNav("Specializations");
+          break;
+
+        case "Add Course":
+          setActiveNav("Courses");
+          break;
+
+        case "Add College":
+          setActiveNav("Colleges");
+          break;
+
+        case "View Enquiries":
+          setActiveNav("Enquiries / Leads");
+          break;
+
+        default:
+          break;
+      }
+    }}
                       className="flex flex-col items-center gap-2 group cursor-pointer"
                     >
                       <div
@@ -661,7 +684,11 @@ const Dashboard = () => {
 
           {activeNav === "Fields" && <AdminField />}
           {activeNav === "Specializations" && <AdminSpecializations />}
+
+          {activeNav === "Courses" && <CoursesManagement />}
+          {activeNav === "Enquiries / Leads" && <AdminEnquiry />}
           {activeNav === "Colleges" && <AdminColleges />}
+
 
           {/* FOOTER */}
           <div className="flex items-center justify-between text-xs text-gray-400 py-2">

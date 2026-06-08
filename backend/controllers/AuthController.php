@@ -311,9 +311,237 @@ class AuthController extends Controller
                 "id" => $user['id'],
                 "name" => $user['name'],
                 "email" => $user['email'],
+                "phone" => $user['phone'],
+                "city" => $user['city'],
+                "gender" => $user['gender'],
+                "dob" => $user['dob'],
                 "is_admin" => (int) $user['is_admin'],
                 "profile_photo" => $user['profile_photo'] ?? null
             ]
+        ];
+    }
+
+    // =========================
+    // GET PROFILE
+    // =========================
+    public function actionGetProfile()
+    {
+        $token = Yii::$app->request->headers->get('Authorization');
+
+        if (!$token) {
+            return [
+                "status" => "error",
+                "message" => "Token missing"
+            ];
+        }
+
+        $userLogin = Yii::$app->db->createCommand("SELECT user_id FROM user_login WHERE token = :token")
+            ->bindValue(':token', $token)->queryOne();
+
+        if (!$userLogin) {
+            return [
+                "status" => "error",
+                "message" => "Invalid or expired session"
+            ];
+        }
+
+        $user = \app\models\User::findOne($userLogin['user_id']);
+        if (!$user) {
+            return [
+                "status" => "error",
+                "message" => "User not found"
+            ];
+        }
+
+        return [
+            "status" => "success",
+            "user" => [
+                "id" => $user->id,
+                "name" => $user->name,
+                "email" => $user->email,
+                "phone" => $user->phone,
+                "city" => $user->city,
+                "gender" => $user->gender,
+                "dob" => $user->dob,
+                "is_admin" => (int) $user->is_admin,
+                "profile_photo" => $user->profile_photo
+            ]
+        ];
+    }
+
+    // =========================
+    // UPDATE PROFILE
+    // =========================
+    public function actionUpdateProfile()
+    {
+        $token = Yii::$app->request->headers->get('Authorization');
+
+        if (!$token) {
+            return [
+                "status" => "error",
+                "message" => "Token missing"
+            ];
+        }
+
+        $userLogin = Yii::$app->db->createCommand("SELECT user_id FROM user_login WHERE token = :token")
+            ->bindValue(':token', $token)->queryOne();
+
+        if (!$userLogin) {
+            return [
+                "status" => "error",
+                "message" => "Invalid or expired session"
+            ];
+        }
+
+        $user = \app\models\User::findOne($userLogin['user_id']);
+        if (!$user) {
+            return [
+                "status" => "error",
+                "message" => "User not found"
+            ];
+        }
+
+        $data = json_decode(Yii::$app->request->getRawBody(), true);
+        if (!$data) {
+            return [
+                "status" => "error",
+                "message" => "Invalid request body"
+            ];
+        }
+
+        // Validate unique email (excluding current user)
+        if (isset($data['email']) && $data['email'] !== $user->email) {
+            $existingEmail = \app\models\User::find()->where(['email' => $data['email']])->andWhere(['!=', 'id', $user->id])->one();
+            if ($existingEmail) {
+                return [
+                    "status" => "error",
+                    "message" => "Email already registered by another user"
+                ];
+            }
+            $user->email = $data['email'];
+        }
+
+        // Validate unique phone (excluding current user)
+        if (isset($data['phone']) && $data['phone'] !== $user->phone) {
+            $existingPhone = \app\models\User::find()->where(['phone' => $data['phone']])->andWhere(['!=', 'id', $user->id])->one();
+            if ($existingPhone) {
+                return [
+                    "status" => "error",
+                    "message" => "Mobile number already registered by another user"
+                ];
+            }
+            $user->phone = $data['phone'];
+        }
+
+        if (isset($data['name'])) {
+            $user->name = $data['name'];
+        }
+        if (isset($data['city'])) {
+            $user->city = $data['city'];
+        }
+        if (isset($data['gender'])) {
+            $user->gender = $data['gender'];
+        }
+        if (isset($data['dob'])) {
+            $user->dob = empty($data['dob']) ? null : $data['dob'];
+        }
+
+        if (array_key_exists('profile_photo', $data)) {
+            $user->profile_photo = empty($data['profile_photo']) ? null : $data['profile_photo'];
+        }
+
+        $user->updated_at = date('Y-m-d H:i:s');
+
+        if ($user->save()) {
+            return [
+                "status" => "success",
+                "message" => "Profile updated successfully",
+                "user" => [
+                    "id" => $user->id,
+                    "name" => $user->name,
+                    "email" => $user->email,
+                    "phone" => $user->phone,
+                    "city" => $user->city,
+                    "gender" => $user->gender,
+                    "dob" => $user->dob,
+                    "is_admin" => (int) $user->is_admin,
+                    "profile_photo" => $user->profile_photo
+                ]
+            ];
+        } else {
+            $errors = $user->getFirstErrors();
+            $errorMessage = reset($errors) ?: "Failed to update profile";
+            return [
+                "status" => "error",
+                "message" => $errorMessage
+            ];
+        }
+    }
+
+    // =========================
+    // CHANGE PASSWORD
+    // =========================
+    public function actionChangePassword()
+    {
+        $token = Yii::$app->request->headers->get('Authorization');
+
+        if (!$token) {
+            return [
+                "status" => "error",
+                "message" => "Token missing"
+            ];
+        }
+
+        $userLogin = Yii::$app->db->createCommand("SELECT user_id FROM user_login WHERE token = :token")
+            ->bindValue(':token', $token)->queryOne();
+
+        if (!$userLogin) {
+            return [
+                "status" => "error",
+                "message" => "Invalid or expired session"
+            ];
+        }
+
+        $data = json_decode(file_get_contents("php://input"), true);
+        $currentPassword = $data['current_password'] ?? '';
+        $newPassword = $data['new_password'] ?? '';
+
+        if (empty($currentPassword) || empty($newPassword)) {
+            return [
+                "status" => "error",
+                "message" => "Current password and new password are required"
+            ];
+        }
+
+        $user = Yii::$app->db->createCommand("SELECT * FROM users WHERE id = :id")
+            ->bindValue(':id', $userLogin['user_id'])->queryOne();
+
+        if (!$user) {
+            return [
+                "status" => "error",
+                "message" => "User not found"
+            ];
+        }
+
+        if (!password_verify($currentPassword, $user['password'])) {
+            return [
+                "status" => "error",
+                "message" => "Incorrect current password"
+            ];
+        }
+
+        Yii::$app->db->createCommand()->update(
+            'users',
+            [
+                'password' => password_hash($newPassword, PASSWORD_DEFAULT),
+                'updated_at' => date('Y-m-d H:i:s')
+            ],
+            ['id' => $user['id']]
+        )->execute();
+
+        return [
+            "status" => "success",
+            "message" => "Password updated successfully"
         ];
     }
 
