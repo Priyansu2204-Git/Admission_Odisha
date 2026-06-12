@@ -1,281 +1,579 @@
-import { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
-import API_BASE from "../../config/api";
+import React, { useState, useEffect, useContext } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import {
+    MapPin, Star, Heart, Share2,
+    School, CheckCircle, GraduationCap,
+    Globe, Info, Award, Users, BookOpen,
+    TrendingUp, HelpCircle, Phone, Mail,
+    Calendar, Building, Maximize, ExternalLink, Images,
+    X, Hotel, FlaskConical, Utensils, ArrowRight
+} from 'lucide-react';
+import { ASSETS_BASE } from '../../config/api';
+import { useEnquiry } from '../../context/EnquiryContext';
+import { AuthContext } from '../../context/AuthContext';
 
-const Stars = ({ rating }) => {
-    const rounded = Math.round(Number(rating) || 0);
+// ── Thank You Success Modal ───────────────────────────────────────────────────
+const EnquirySuccessModal = ({ open, onClose }) => {
+    const [visible, setVisible] = useState(false);
+    useEffect(() => {
+        if (open) setTimeout(() => setVisible(true), 10);
+        else setVisible(false);
+    }, [open]);
+    if (!open) return null;
     return (
-        <span style={{ color: "#f59e0b", fontSize: 13 }}>
-            {"★".repeat(rounded)}{"☆".repeat(5 - rounded)}
-        </span>
+        <div
+            onClick={(e) => e.target === e.currentTarget && onClose()}
+            style={{
+                position: "fixed", inset: 0, zIndex: 999999,
+                display: "flex", alignItems: "center", justifyContent: "center", padding: 16,
+                background: "rgba(10,10,30,0.55)", backdropFilter: "blur(6px)",
+                transition: "opacity 0.3s ease", opacity: visible ? 1 : 0,
+            }}
+        >
+            <div style={{
+                position: "relative", width: "100%", maxWidth: 440,
+                background: "white", borderRadius: 28, overflow: "hidden",
+                boxShadow: "0 32px 80px rgba(108,77,246,0.18), 0 8px 32px rgba(0,0,0,0.12)",
+                transform: visible ? "scale(1) translateY(0)" : "scale(0.88) translateY(28px)",
+                transition: "transform 0.45s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s ease",
+                opacity: visible ? 1 : 0,
+            }}>
+                <button onClick={onClose} style={{
+                    position: "absolute", top: 14, right: 14, zIndex: 10,
+                    width: 30, height: 30, borderRadius: "50%",
+                    background: "#F3F4F6", border: "none", cursor: "pointer",
+                    display: "flex", alignItems: "center", justifyContent: "center", color: "#9CA3AF",
+                }}>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                        <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                </button>
+                <div style={{
+                    background: "linear-gradient(160deg, #FFF5F7 0%, #F5F3FF 100%)",
+                    padding: "40px 24px 24px", display: "flex", flexDirection: "column",
+                    alignItems: "center", position: "relative",
+                }}>
+                    <span style={{ position: "absolute", top: 20, left: 24, fontSize: 18, animation: "floatUp 2s ease-in-out infinite" }}>💗</span>
+                    <span style={{ position: "absolute", top: 30, right: 28, fontSize: 13, animation: "floatUp 2.5s ease-in-out infinite 0.5s" }}>✨</span>
+                    <span style={{ position: "absolute", bottom: 30, left: 20, fontSize: 11, animation: "floatUp 3s ease-in-out infinite 1s" }}>⭐</span>
+                    <div style={{
+                        width: 140, height: 140, borderRadius: "50%", marginBottom: 12,
+                        background: "radial-gradient(circle, #FFD6DE 0%, #FFF0F3 65%, transparent 100%)",
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                    }}>
+                        <svg width="110" height="95" viewBox="0 0 110 95" fill="none">
+                            <rect x="12" y="38" width="86" height="52" rx="7" fill="#FFB3C6" />
+                            <path d="M12 38 L55 14 L98 38" fill="#FF8FAB" />
+                            <path d="M12 38 L55 58 L98 38" fill="#FFCCD8" />
+                            <rect x="26" y="10" width="58" height="68" rx="5" fill="white" opacity="0.97" />
+                            <circle cx="55" cy="36" r="17" fill="#FFE4EC" />
+                            <path d="M48 33 Q49.5 30.5 51 33" stroke="#FF6B8A" strokeWidth="1.8" strokeLinecap="round" fill="none" />
+                            <path d="M59 33 Q60.5 30.5 62 33" stroke="#FF6B8A" strokeWidth="1.8" strokeLinecap="round" fill="none" />
+                            <path d="M49 40 Q55 46 61 40" stroke="#FF6B8A" strokeWidth="1.8" strokeLinecap="round" fill="none" />
+                            <circle cx="46" cy="42" r="4" fill="#FFB3C6" opacity="0.5" />
+                            <circle cx="64" cy="42" r="4" fill="#FFB3C6" opacity="0.5" />
+                            <path d="M52 21 C52 18.5 55 17 55 20 C55 17 58 18.5 58 21 C58 23.5 55 26 55 26 C55 26 52 23.5 52 21Z" fill="#FF6B8A" />
+                            <g transform="translate(80, 5) rotate(-25)">
+                                <path d="M0 0 L22 9 L0 18 L5 9 Z" fill="#FF8FAB" />
+                                <path d="M0 18 L5 9 L22 9" fill="#FF6B8A" opacity="0.5" />
+                            </g>
+                            <g transform="translate(6, 72)">
+                                <path d="M8 18 C8 18 8 5 8 0" stroke="#C5CEFF" strokeWidth="1.5" strokeLinecap="round" />
+                                <path d="M8 12 C4 8 0 10 1 14 C2 18 8 16 8 12Z" fill="#C5CEFF" opacity="0.7" />
+                                <path d="M8 7 C12 3 16 5 15 9 C14 13 8 11 8 7Z" fill="#A0AAEE" opacity="0.6" />
+                            </g>
+                            <g transform="translate(88, 72)">
+                                <path d="M8 18 C8 18 8 5 8 0" stroke="#FFB3C6" strokeWidth="1.5" strokeLinecap="round" />
+                                <path d="M8 12 C12 8 16 10 15 14 C14 18 8 16 8 12Z" fill="#FFB3C6" opacity="0.7" />
+                                <path d="M8 7 C4 3 0 5 1 9 C2 13 8 11 8 7Z" fill="#FF8FAB" opacity="0.6" />
+                            </g>
+                            <text x="4" y="26" fontSize="11">✨</text>
+                            <text x="88" y="62" fontSize="9">💕</text>
+                        </svg>
+                    </div>
+                    <h2 style={{ margin: "0 0 4px", fontSize: 30, fontWeight: 800, color: "#1a1a3e", fontFamily: "Georgia, serif" }}>
+                        Thank You! 💖
+                    </h2>
+                    <p style={{ margin: 0, fontSize: 15, fontWeight: 600, color: "#FF6B8A" }}>
+                        Your enquiry has been received.
+                    </p>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 10 }}>
+                        <div style={{ width: 40, height: 1.5, background: "linear-gradient(90deg, transparent, #FFB3C6)" }} />
+                        <span style={{ fontSize: 12 }}>💗</span>
+                        <div style={{ width: 40, height: 1.5, background: "linear-gradient(90deg, #FFB3C6, transparent)" }} />
+                    </div>
+                </div>
+                <div style={{ padding: "22px 28px 20px", background: "white" }}>
+                    <div style={{
+                        display: "flex", alignItems: "flex-start", gap: 14,
+                        borderRadius: 16, padding: "16px 18px", marginBottom: 18,
+                        background: "linear-gradient(135deg, #F5F3FF 0%, #FFF5F7 100%)",
+                        border: "1px solid #E8E4FF",
+                    }}>
+                        <span style={{ fontSize: 36, flexShrink: 0, lineHeight: 1 }}>⭐</span>
+                        <div>
+                            <p style={{ margin: "0 0 4px", fontSize: 14, fontWeight: 800, color: "#1a1a3e" }}>Dream it. Believe it. Achieve it.</p>
+                            <p style={{ margin: 0, fontSize: 13, color: "#6B7280", lineHeight: 1.6 }}>
+                                We'll connect with you soon and help you take the next step towards your dreams. ✨
+                            </p>
+                        </div>
+                    </div>
+                    <div style={{ textAlign: "center", marginBottom: 16 }}>
+                        <p style={{ margin: "0 0 4px", fontSize: 13, color: "#9CA3AF" }}>❤️ Keep learning, keep growing.</p>
+                        <p style={{ margin: 0, fontSize: 14, color: "#6B7280" }}>
+                            <strong style={{ color: "#6C4DF6" }}>Admission Odisha</strong> is with you always! 🌟
+                        </p>
+                    </div>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", paddingTop: 8 }}>
+                        <svg width="32" height="42" viewBox="0 0 32 42" fill="none">
+                            <path d="M16 42 L16 18" stroke="#C5CEFF" strokeWidth="1.8" strokeLinecap="round" />
+                            <path d="M16 30 C10 24 4 26 6 32 C8 38 16 35 16 30Z" fill="#C5CEFF" opacity="0.65" />
+                            <path d="M16 23 C22 17 28 19 26 25 C24 31 16 28 16 23Z" fill="#A0AAEE" opacity="0.55" />
+                        </svg>
+                        <svg width="26" height="24" viewBox="0 0 26 24" fill="none">
+                            <path d="M13 22 C13 22 1 14 1 7 C1 3.5 4 1 7 1 C10 1 13 4 13 4 C13 4 16 1 19 1 C22 1 25 3.5 25 7 C25 14 13 22 13 22Z" stroke="#C5CEFF" strokeWidth="1.8" fill="none" />
+                        </svg>
+                        <svg width="32" height="42" viewBox="0 0 32 42" fill="none">
+                            <path d="M16 42 L16 18" stroke="#FFB3C6" strokeWidth="1.8" strokeLinecap="round" />
+                            <path d="M16 30 C22 24 28 26 26 32 C24 38 16 35 16 30Z" fill="#FFB3C6" opacity="0.65" />
+                            <path d="M16 23 C10 17 4 19 6 25 C8 31 16 28 16 23Z" fill="#FF8FAB" opacity="0.55" />
+                        </svg>
+                    </div>
+                </div>
+                <div style={{ height: 20, background: "linear-gradient(135deg, #F5F3FF 0%, #FFF5F7 100%)", borderRadius: "0 0 28px 28px" }} />
+                <style>{`
+          @keyframes floatUp {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+          }
+        `}</style>
+            </div>
+        </div>
+    );
+};
+// ─────────────────────────────────────────────────────────────────────────────
+
+const CampusGalleryModal = ({ open, onClose, college, galleryItems }) => {
+    if (!open) return null;
+
+    return (
+        <div
+            onClick={(e) => e.target === e.currentTarget && onClose()}
+            className="fixed inset-0 z-[99999] flex items-center justify-center bg-[#071B52]/35 px-4 py-6 backdrop-blur-sm"
+        >
+            <div className="w-full max-w-[560px] max-h-[calc(100vh-32px)] overflow-y-auto rounded-2xl bg-white p-5 sm:p-6 shadow-2xl border border-gray-100">
+                <div className="flex items-start justify-between gap-4">
+                    <div>
+                        <h3 className="flex items-center gap-3 text-lg font-bold text-[#071B52]">
+                            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600">
+                                <Images size={19} />
+                            </span>
+                            Campus Gallery
+                        </h3>
+                        <p className="mt-2 text-sm font-medium text-gray-500">
+                            Explore the beautiful campus and world-class facilities
+                        </p>
+                    </div>
+                    <button
+                        onClick={onClose}
+                        aria-label="Close campus gallery"
+                        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-[#071B52] hover:bg-gray-100 transition-colors"
+                    >
+                        <X size={20} />
+                    </button>
+                </div>
+
+                <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {galleryItems.map((item) => (
+                        <div key={item.label} className="relative h-[136px] overflow-hidden rounded-lg bg-gray-100 shadow-sm">
+                            <img
+                                src={item.image}
+                                alt={`${college.name} ${item.label}`}
+                                className="h-full w-full object-cover"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent"></div>
+                            <div className="absolute bottom-4 left-4 flex items-center gap-2 text-sm font-bold text-white drop-shadow">
+                                {item.icon}
+                                <span>{item.label}</span>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                <div className="mt-5 flex justify-end">
+                    <button className="inline-flex items-center gap-2 rounded-lg border border-indigo-400 px-5 py-3 text-sm font-bold text-indigo-600 hover:bg-indigo-50 transition-colors">
+                        View All Photos
+                        <ArrowRight size={16} />
+                    </button>
+                </div>
+            </div>
+        </div>
     );
 };
 
-export default function CourseDetail() {
-    const { courseSlug } = useParams();
-    const [course, setCourse] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState("");
-    const [wishlist, setWishlist] = useState(false);
-    const [enquired, setEnquired] = useState(false);
+const CollegeDetail = () => {
+    const { id } = useParams();
+    const [college, setCollege] = useState(null);
+    const [courses, setCourses] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [successOpen, setSuccessOpen] = useState(false);
+    const [galleryOpen, setGalleryOpen] = useState(false);
+    const { openEnquiry, isOpen, closeEnquiry, openGuidance } = useEnquiry();
+    const { wishlist, toggleWishlist } = useContext(AuthContext);
+
+    // Listen for successful enquiry submission from EnquiryFloating
+    useEffect(() => {
+        const handleSuccess = () => setSuccessOpen(true);
+        window.addEventListener("enquiry-submitted", handleSuccess);
+        return () => window.removeEventListener("enquiry-submitted", handleSuccess);
+    }, []);
 
     useEffect(() => {
-        window.scrollTo(0, 0);
-    }, [courseSlug]);
-
-    useEffect(() => {
-        const fetchCourse = async () => {
+        const fetchCollegeDetail = async () => {
             try {
-                setLoading(true);
-                const slugToFetch = courseSlug || 'btech';
-                const res = await fetch(`${API_BASE}?r=site/api-general-course-detail&slug=${slugToFetch}`);
-                const result = await res.json();
-
+                const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}?r=site/api-college-detail&id=${id}`);
+                const result = await response.json();
                 if (result.status === 'success') {
-                    setCourse(result.data);
-                } else {
-                    setError(result.message || "Course not found");
+                    setCollege(result.data.college);
+                    setCourses(result.data.courses);
                 }
-            } catch (err) {
-                setError("Failed to fetch course details");
+            } catch (error) {
+                console.error("Error fetching college details:", error);
             } finally {
-                setLoading(false);
+                setIsLoading(false);
             }
         };
+        fetchCollegeDetail();
+        window.scrollTo(0, 0);
+    }, [id]);
 
-        fetchCourse();
-    }, [courseSlug]);
-
-    if (loading) {
-        return <div className="flex justify-center items-center min-h-screen text-[#5b4eff] font-bold text-xl">Loading course details...</div>;
-    }
-
-    if (error || !course) {
-        return <div className="flex justify-center items-center min-h-screen text-red-500 font-bold text-xl">{error || "Course not found"}</div>;
-    }
-
-    const CAREERS = course.career_opportunities || [];
-    const ELIGIBILITY = course.eligibility || [];
-    const SPECIALIZATIONS = course.top_specializations || [];
-    const COLLEGES = course.top_colleges || [];
-
-    const STATS = [
-        { icon: "🕐", label: "Duration", value: course.duration },
-        { icon: "🎓", label: "Degree", value: course.degree },
-        { icon: "📋", label: "Mode", value: course.mode },
-        { icon: "📊", label: "Level", value: course.level },
-    ];
-
-    // Generic icons for specializations if not provided in DB
-    const getSpecIcon = (index) => {
-        const icons = ["</>", "⚙️", "⚡", "🏗️", "📡", "💻", "🔬", "🧪"];
-        return icons[index % icons.length];
+    const getImageUrl = (imagePath, isBanner = false) => {
+        if (!imagePath) {
+            return isBanner
+                ? 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=1200&h=400&fit=crop'
+                : '/src/assets/images/temple.png';
+        }
+        if (imagePath.startsWith('http')) return imagePath;
+        return `${ASSETS_BASE}/${imagePath}`;
     };
 
-    return (
-        <div style={{ fontFamily: "'Outfit', 'Segoe UI', sans-serif", background: "#f8f9fc", minHeight: "100vh", color: "#1a1a2e" }}>
-            <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        a { text-decoration: none; color: inherit; }
-        body { margin: 0; }
-        .hover-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(91,78,255,0.13) !important; }
-        .nav-link:hover { color: #5b4eff; }
-        .btn-primary:hover { background: #4A3EE8 !important; transform: translateY(-1px); }
-        .btn-outline:hover { background: #f3f4f6 !important; }
-        .college-card:hover { border-color: #5b4eff !important; transform: translateY(-2px); }
-        .career-card:hover { border-color: #5b4eff !important; background: #f5f3ff !important; }
-        .fade-in { animation: fadeIn 0.5s ease both; }
-        @keyframes fadeIn { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
-      `}</style>
+    const getCampusGalleryItems = () => {
+        const labels = [
+            { label: 'Library', search: 'library reading room', icon: <BookOpen size={17} /> },
+            { label: 'Hostel', search: 'hostel building campus', icon: <Hotel size={17} /> },
+            { label: 'Sports Ground', search: 'sports ground campus', icon: <Maximize size={17} /> },
+            { label: 'Laboratory', search: 'medical laboratory students', icon: <FlaskConical size={17} /> },
+            { label: 'Auditorium', search: 'college auditorium', icon: <Users size={17} /> },
+            { label: 'Cafeteria', search: 'college cafeteria', icon: <Utensils size={17} /> },
+        ];
 
-            {/* BREADCRUMB */}
-            <div style={{ maxWidth: 1200, margin: "0 auto", padding: "14px 40px", fontSize: 13, color: "#9ca3af" }}>
-                <Link to="/" style={{ color: "inherit", transition: "color 0.2s" }} onMouseEnter={e => e.target.style.color = "#5b4eff"} onMouseLeave={e => e.target.style.color = "inherit"}>Home</Link> › 
-                <Link to="/course" style={{ color: "inherit", transition: "color 0.2s", marginLeft: 4, marginRight: 4 }} onMouseEnter={e => e.target.style.color = "#5b4eff"} onMouseLeave={e => e.target.style.color = "inherit"}>Courses</Link> › 
-                <Link to={`/field/${course.category?.toLowerCase()}`} style={{ color: "inherit", transition: "color 0.2s", marginLeft: 4, marginRight: 4 }} onMouseEnter={e => e.target.style.color = "#5b4eff"} onMouseLeave={e => e.target.style.color = "inherit"}>{course.category}</Link> › 
-                <span style={{ color: "#5b4eff", fontWeight: 500, marginLeft: 4 }}>{course.short_name}</span>
+        const rawGallery = college.gallery_images || college.gallery || college.campus_gallery || college.photos;
+        let uploadedImages = [];
+
+        if (Array.isArray(rawGallery)) {
+            uploadedImages = rawGallery;
+        } else if (typeof rawGallery === 'string' && rawGallery.trim()) {
+            try {
+                const parsed = JSON.parse(rawGallery);
+                uploadedImages = Array.isArray(parsed) ? parsed : rawGallery.split(',');
+            } catch {
+                uploadedImages = rawGallery.split(',');
+            }
+        }
+
+        const normalizedImages = uploadedImages
+            .map((item) => {
+                if (typeof item === 'string') return item.trim();
+                return item?.image || item?.url || item?.path || '';
+            })
+            .filter(Boolean);
+
+        return labels.map((item, index) => ({
+            ...item,
+            image: normalizedImages[index]
+                ? getImageUrl(normalizedImages[index], true)
+                : `https://source.unsplash.com/640x420/?${encodeURIComponent(`${college.name} ${college.location || 'Odisha'} ${item.search}`)}`,
+        }));
+    };
+
+    if (isLoading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-gray-50">
+                <div className="flex flex-col items-center gap-4">
+                    <div className="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
+                    <p className="text-gray-500 font-medium animate-pulse">Loading college details...</p>
+                </div>
             </div>
+        );
+    }
 
-            {/* HERO SECTION */}
-            <div style={{ maxWidth: 1200, margin: "0 auto 0", padding: "0 40px 40px" }}>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 32, alignItems: "center", background: "white", borderRadius: 20, padding: 36, boxShadow: "0 4px 24px rgba(0,0,0,0.06)" }} className="fade-in">
-                    {/* Left */}
-                    <div>
-                        <span style={{ display: "inline-block", background: "#eef0ff", color: "#5b4eff", fontSize: 12, fontWeight: 600, padding: "4px 12px", borderRadius: 20, marginBottom: 16 }}>{course.category}</span>
-                        <h1 style={{ fontSize: 52, fontWeight: 800, lineHeight: 1, color: "#1a1a2e", marginBottom: 6 }}>{course.short_name}</h1>
-                        <h2 style={{ fontSize: 20, fontWeight: 600, color: "#374151", marginBottom: 16 }}>{course.full_name}</h2>
-                        <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 16 }}>
-                            <span style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 14, fontWeight: 500 }}>
-                                <span style={{ color: "#f59e0b", fontSize: 16 }}>★</span> {course.rating} ({course.reviews_count} Reviews)
-                            </span>
-                            <span style={{ width: 1, height: 18, background: "#e5e7eb" }} />
-                            <span style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 14, fontWeight: 600, color: "#ef4444" }}>
-                                {course.badge}
-                            </span>
-                        </div>
-                        <p style={{ fontSize: 14, color: "#6b7280", lineHeight: 1.7, marginBottom: 28, maxWidth: 420 }}>
-                            {course.short_description}
-                        </p>
-                        <div style={{ display: "flex", gap: 12 }}>
-                            <button
-                                className="btn-primary"
-                                onClick={() => setEnquired(true)}
-                                style={{ display: "flex", alignItems: "center", gap: 8, padding: "12px 24px", background: enquired ? "#22c55e" : "#5b4eff", color: "white", border: "none", borderRadius: 10, fontSize: 14, fontWeight: 600, cursor: "pointer", transition: "all 0.2s" }}
-                            >
-                                💬 {enquired ? "Enquiry Sent!" : "Enquire Now"}
-                            </button>
-                            <button
-                                className="btn-outline"
-                                onClick={() => setWishlist(!wishlist)}
-                                style={{ display: "flex", alignItems: "center", gap: 8, padding: "12px 24px", background: "white", color: wishlist ? "#ef4444" : "#374151", border: "1.5px solid #e5e7eb", borderRadius: 10, fontSize: 14, fontWeight: 600, cursor: "pointer", transition: "all 0.2s" }}
-                            >
-                                {wishlist ? "❤️" : "🤍"} {wishlist ? "Wishlisted" : "Add to Wishlist"}
-                            </button>
-                        </div>
-                    </div>
-                    {/* Right: Image placeholder */}
-                    <div style={{ position: "relative", borderRadius: 16, overflow: "hidden", aspectRatio: "4/3", background: "linear-gradient(135deg,#1e1b4b 0%,#312e81 40%,#4338ca 100%)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                        <div style={{ textAlign: "center", color: "white" }}>
-                            <div style={{ fontSize: 80 }}>🎓</div>
-                            <div style={{ fontSize: 14, opacity: 0.7, marginTop: 8 }}>{course.short_name} — {course.full_name}</div>
-                        </div>
-                        <div style={{ position: "absolute", bottom: 14, left: 14, background: "rgba(255,255,255,0.95)", borderRadius: 10, padding: "8px 14px", display: "flex", alignItems: "center", gap: 8, fontSize: 13, fontWeight: 500, boxShadow: "0 4px 12px rgba(0,0,0,0.15)" }}>
-                            🖼️ Image Gallery &nbsp;<strong>8 Photos</strong>
-                        </div>
+    if (!college) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-gray-50">
+                <div className="text-center">
+                    <h2 className="text-2xl font-bold text-gray-800 mb-2">College Not Found</h2>
+                    <p className="text-gray-600 mb-6">The college you are looking for might have been removed or is unavailable.</p>
+                    <Link to="/colleges" className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition">
+                        Back to Colleges
+                    </Link>
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div className="bg-[#F8F9FC] min-h-screen pb-20">
+
+            {/* Thank You Modal */}
+            <EnquirySuccessModal open={successOpen} onClose={() => setSuccessOpen(false)} />
+            <CampusGalleryModal
+                open={galleryOpen}
+                onClose={() => setGalleryOpen(false)}
+                college={college}
+                galleryItems={getCampusGalleryItems()}
+            />
+
+            {/* Breadcrumb */}
+            <div className="bg-white border-b border-gray-100">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3">
+                    <div className="flex items-center gap-2 text-sm text-gray-500">
+                        <Link to="/" className="hover:text-indigo-600 transition">Home</Link>
+                        <span className="text-gray-400">›</span>
+                        <Link to="/colleges" className="hover:text-indigo-600 transition">Colleges</Link>
+                        <span className="text-gray-400">›</span>
+                        <span className="text-indigo-600 font-medium truncate">{college.name}</span>
                     </div>
                 </div>
             </div>
 
-            {/* STATS BAR */}
-            <div style={{ maxWidth: 1200, margin: "0 auto 32px", padding: "0 40px" }}>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", background: "white", borderRadius: 16, boxShadow: "0 2px 12px rgba(0,0,0,0.06)", overflow: "hidden" }}>
-                    {STATS.map((s, i) => (
-                        <div key={s.label} style={{ padding: "20px 28px", display: "flex", alignItems: "center", gap: 14, borderRight: i < 3 ? "1px solid #f0f0f5" : "none" }}>
-                            <div style={{ width: 44, height: 44, background: "#eef0ff", borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20 }}>{s.icon}</div>
+            {/* Hero Banner Section */}
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-6">
+                <div className="relative rounded-3xl overflow-hidden shadow-xl bg-white border border-gray-100">
+                    <div className="h-64 md:h-96 w-full relative">
+                        <img src={getImageUrl(college.banner_image, true)} alt={college.name} className="w-full h-full object-cover" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                    </div>
+                    <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10 flex flex-col md:flex-row items-start md:items-end gap-6">
+                        <div className="bg-white p-4 rounded-2xl shadow-2xl relative z-10 w-24 h-24 md:w-32 md:h-32 flex items-center justify-center border-4 border-white">
+                            <img src={getImageUrl(college.image)} alt="logo" className="w-full h-full object-contain" />
+                        </div>
+                        <div className="flex-1 text-white">
+                            <div className="flex flex-wrap items-center gap-3 mb-2">
+                                <span className="bg-indigo-600/90 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                                    {college.type || 'University'}
+                                </span>
+                            </div>
+                            <h1 className="text-3xl md:text-5xl font-bold mb-3 drop-shadow-md">{college.name}</h1>
+                            <div className="flex flex-wrap items-center gap-4 text-gray-200">
+                                <div className="flex items-center gap-1.5 bg-black/20 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10">
+                                    <MapPin size={16} className="text-indigo-400" />
+                                    <span className="text-sm font-medium">{college.location}, Odisha</span>
+                                </div>
+                                <div className="flex items-center gap-1.5 bg-black/20 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10">
+                                    <Star size={16} className="text-yellow-400 fill-yellow-400" />
+                                    <span className="text-sm font-bold">{college.rating} <span className="text-gray-300 font-normal">(1280 Reviews)</span></span>
+                                </div>
+                            </div>
+                        </div>
+                        {/* Action Buttons */}
+                        <div className="flex items-center gap-3 w-full md:w-auto">
+                            <button
+                                onClick={() => toggleWishlist(college.id)}
+                                className={`flex-1 md:flex-none flex items-center justify-center gap-2 font-bold px-6 py-3 rounded-xl transition-all shadow-lg active:scale-95 ${wishlist?.includes(parseInt(college.id, 10))
+                                        ? 'bg-red-50 text-red-500 hover:bg-red-100'
+                                        : 'bg-white text-[#071B52] hover:bg-gray-100'
+                                    }`}
+                            >
+                                <Heart size={20} className={wishlist?.includes(parseInt(college.id, 10)) ? 'fill-current' : ''} />
+                                <span>{wishlist?.includes(parseInt(college.id, 10)) ? 'Wishlisted' : 'Add to Wishlist'}</span>
+                            </button>
+                            {/* ✅ Opens enquiry form → on success shows thank you modal */}
+                            <button
+                                onClick={openEnquiry}
+                                className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-indigo-600 text-white font-bold px-8 py-3 rounded-xl hover:bg-indigo-700 transition-all shadow-lg active:scale-95"
+                            >
+                                Enquire Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Quick Highlights Bar */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
+                    {[
+                        { label: 'Established', value: college.established_year || '1992', icon: <Calendar size={20} />, bg: 'bg-blue-50', color: 'text-blue-600' },
+                        { label: 'Type', value: college.type || 'Deemed University', icon: <Building size={20} />, bg: 'bg-indigo-50', color: 'text-indigo-600' },
+                        { label: 'Approved By', value: college.approved_by || 'UGC, AICTE', icon: <Award size={20} />, bg: 'bg-teal-50', color: 'text-teal-600' },
+                        { label: 'Campus Size', value: college.campus_size || '100+ Acres', icon: <Maximize size={20} />, bg: 'bg-amber-50', color: 'text-amber-600' },
+                    ].map((item, index) => (
+                        <div key={index} className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-center gap-4 hover:shadow-md transition">
+                            <div className={`${item.bg} ${item.color} p-3 rounded-xl`}>{item.icon}</div>
                             <div>
-                                <div style={{ fontSize: 11, color: "#9ca3af", fontWeight: 500, marginBottom: 2 }}>{s.label}</div>
-                                <div style={{ fontSize: 15, fontWeight: 700, color: "#1a1a2e" }}>{s.value}</div>
+                                <p className="text-xs text-gray-500 font-medium">{item.label}</p>
+                                <p className="text-sm font-bold text-[#071B52]">{item.value}</p>
                             </div>
                         </div>
                     ))}
                 </div>
             </div>
 
-            {/* ABOUT */}
-            <div style={{ maxWidth: 1200, margin: "0 auto 32px", padding: "0 40px" }}>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 340px", gap: 28, background: "white", borderRadius: 20, padding: 36, boxShadow: "0 2px 12px rgba(0,0,0,0.05)" }}>
-                    <div>
-                        <h3 style={{ fontSize: 20, fontWeight: 700, marginBottom: 14 }}>About {course.short_name}</h3>
-                        <p style={{ fontSize: 14, color: "#4b5563", lineHeight: 1.8, marginBottom: 16 }}>
-                            {course.about_description}
-                        </p>
-                        <a href="#" style={{ color: "#5b4eff", fontWeight: 600, fontSize: 14, display: "inline-flex", alignItems: "center", gap: 6 }}>Read More →</a>
-                    </div>
-                    <div style={{ background: "linear-gradient(135deg,#eef0ff,#e8f5ff)", borderRadius: 16, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 64, minHeight: 180 }}>
-                        ⚙️
-                    </div>
-                </div>
-            </div>
+            {/* Main Content Grid */}
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 mt-10">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-            {/* CAREER OPPORTUNITIES */}
-            <div style={{ maxWidth: 1200, margin: "0 auto 32px", padding: "0 40px" }}>
-                <div style={{ background: "white", borderRadius: 20, padding: 36, boxShadow: "0 2px 12px rgba(0,0,0,0.05)" }}>
-                    <h3 style={{ fontSize: 20, fontWeight: 700, marginBottom: 24 }}>Career Opportunities</h3>
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(6,1fr)", gap: 16 }}>
-                        {CAREERS.map(c => (
-                            <div key={c.title} className="career-card hover-card" style={{ padding: "20px 14px", border: "1.5px solid #f0f0f5", borderRadius: 14, textAlign: "center", cursor: "pointer", transition: "all 0.2s" }}>
-                                <div style={{ fontSize: 28, marginBottom: 10 }}>{c.icon || "💼"}</div>
-                                <div style={{ fontSize: 13, fontWeight: 700, color: "#1a1a2e", marginBottom: 8, lineHeight: 1.3 }}>{c.title}</div>
-                                <div style={{ fontSize: 11, color: "#6b7280", lineHeight: 1.5 }}>{c.desc}</div>
+                    {/* Left Column */}
+                    <div className="lg:col-span-2 space-y-8">
+
+                        {/* About Section */}
+                        <div className="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm">
+                            <h2 className="text-2xl font-bold text-[#071B52] mb-6 flex items-center gap-3">
+                                <span className="w-1.5 h-8 bg-indigo-600 rounded-full"></span>
+                                About {college.name}
+                            </h2>
+                            <div className="prose prose-indigo max-w-none text-gray-600 leading-relaxed">
+                                <p>{college.description}</p>
                             </div>
-                        ))}
-                    </div>
-                </div>
-            </div>
+                            <button className="mt-6 text-indigo-600 font-bold flex items-center gap-1 hover:gap-2 transition-all group">
+                                Read More <TrendingUp size={18} className="group-hover:translate-x-1 transition-transform" />
+                            </button>
+                            <button
+                                onClick={() => setGalleryOpen(true)}
+                                className="mt-4 inline-flex items-center gap-2 rounded-lg border border-indigo-500 px-4 py-2 text-sm font-bold text-indigo-600 hover:bg-indigo-50 transition-colors"
+                            >
+                                <Images size={16} />
+                                <span>Campus Gallery</span>
+                            </button>
+                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6 pt-6 border-t border-gray-50">
+                                {[
+                                    { label: 'Accredited', value: 'NAAC A++', icon: <Award className="text-indigo-500" /> },
+                                    { label: 'Students', value: '10000+', icon: <Users className="text-blue-500" /> },
+                                    { label: 'Faculty', value: '1000+', icon: <Building className="text-amber-500" /> },
+                                    { label: 'Countries', value: '50+', icon: <Globe className="text-teal-500" /> },
+                                    { label: 'Programs', value: '100+', icon: <BookOpen className="text-purple-500" /> },
+                                    { label: 'Placement', value: 'Top Records', icon: <TrendingUp className="text-green-500" /> },
+                                    { label: 'Collaboration', value: 'Global', icon: <Globe className="text-orange-500" /> },
+                                    { label: 'Research', value: '24+', icon: <Maximize className="text-red-500" /> },
+                                ].map((highlight, idx) => (
+                                    <div key={idx} className="bg-gray-50 p-4 rounded-2xl flex flex-col items-center text-center group hover:bg-white hover:shadow-md border border-transparent hover:border-indigo-100 transition duration-300">
+                                        <div className="p-2 bg-white rounded-xl shadow-sm mb-3 group-hover:scale-110 transition duration-300">{highlight.icon}</div>
+                                        <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">{highlight.label}</p>
+                                        <p className="text-sm font-bold text-[#071B52]">{highlight.value}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
 
-            {/* ELIGIBILITY + FEES + SPECIALIZATIONS */}
-            <div style={{ maxWidth: 1200, margin: "0 auto 32px", padding: "0 40px" }}>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 24 }}>
-                    {/* Eligibility */}
-                    <div style={{ background: "white", borderRadius: 20, padding: 28, boxShadow: "0 2px 12px rgba(0,0,0,0.05)" }}>
-                        <h4 style={{ fontSize: 16, fontWeight: 700, marginBottom: 18 }}>Eligibility</h4>
-                        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                            {ELIGIBILITY.map(e => (
-                                <div key={e} style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
-                                    <span style={{ color: "#22c55e", marginTop: 2, flexShrink: 0 }}>✅</span>
-                                    <span style={{ fontSize: 13, color: "#4b5563", lineHeight: 1.5 }}>{e}</span>
+                        {/* Courses Offered */}
+                        <div className="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm">
+                            <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+                                <div>
+                                    <h2 className="text-2xl font-bold text-[#071B52] flex items-center gap-3">
+                                        <span className="w-1.5 h-8 bg-indigo-600 rounded-full"></span>
+                                        Courses Offered
+                                    </h2>
+                                    <p className="text-gray-500 text-sm mt-1 ml-4">Explore popular programs offered by {college.name}</p>
                                 </div>
-                            ))}
+                                <button className="bg-indigo-50 text-indigo-600 px-5 py-2.5 rounded-xl font-bold hover:bg-indigo-600 hover:text-white transition duration-300 text-sm">
+                                    View All Courses
+                                </button>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                {college.courses && college.courses.length > 0 ? college.courses.map((course, idx) => (
+                                    <Link key={idx} to={`/colleges/${college.id}/courses/${course.name}`}
+                                        className="p-6 border border-gray-100 rounded-2xl hover:border-indigo-200 hover:bg-indigo-50/30 transition-all group cursor-pointer block">
+                                        <div className="flex items-start justify-between mb-4">
+                                            <div className="p-3 bg-white rounded-2xl shadow-sm text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white transition-colors duration-300">
+                                                <GraduationCap size={24} />
+                                            </div>
+                                            <div className="text-right"><span className="text-xs font-medium text-gray-600">{course.duration}</span></div>
+                                        </div>
+                                        <h3 className="text-lg font-bold text-[#071B52] mb-2 group-hover:text-indigo-600 transition-colors">{course.name}</h3>
+                                        <p className="text-sm text-gray-500 line-clamp-2">Click to view available specializations and detailed curriculum.</p>
+                                    </Link>
+                                )) : (
+                                    <div className="col-span-full py-10 text-center bg-gray-50 rounded-2xl">
+                                        <p className="text-gray-500">No courses listed for this college yet.</p>
+                                    </div>
+                                )}
+                            </div>
                         </div>
-                    </div>
 
-                    {/* Fees */}
-                    <div style={{ background: "white", borderRadius: 20, padding: 28, boxShadow: "0 2px 12px rgba(0,0,0,0.05)" }}>
-                        <h4 style={{ fontSize: 16, fontWeight: 700, marginBottom: 18 }}>Average Fees</h4>
-                        <div style={{ background: "linear-gradient(135deg,#eef0ff,#e8f5ff)", borderRadius: 14, padding: "24px 20px", textAlign: "center" }}>
-                            <div style={{ fontSize: 11, color: "#9ca3af", marginBottom: 8 }}>💰</div>
-                            <div style={{ fontSize: 22, fontWeight: 800, color: "#5b4eff", marginBottom: 6 }}>{course.fees_range}</div>
-                            <div style={{ fontSize: 14, fontWeight: 600, color: "#374151" }}>/ Year</div>
-                            <div style={{ fontSize: 11, color: "#9ca3af", marginTop: 8 }}>Fees may vary from college to college.</div>
-                        </div>
-                    </div>
-
-                    {/* Specializations */}
-                    <div style={{ background: "white", borderRadius: 20, padding: 28, boxShadow: "0 2px 12px rgba(0,0,0,0.05)" }}>
-                        <h4 style={{ fontSize: 16, fontWeight: 700, marginBottom: 18 }}>Top Specializations</h4>
-                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 14 }}>
-                            {SPECIALIZATIONS.map((s, index) => (
-                                <div key={s.label || s} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, color: "#374151", fontWeight: 500 }}>
-                                    {/* Use icon from DB if available, else use a generated icon from frontend */}
-                                    <span style={{ fontSize: 14 }}>{s.icon || getSpecIcon(index)}</span> {s.label || s}
-                                </div>
-                            ))}
-                        </div>
-                        <a href="#" style={{ color: "#5b4eff", fontWeight: 600, fontSize: 13 }}>View All Specializations →</a>
-                    </div>
-                </div>
-            </div>
-
-            {/* TOP COLLEGES */}
-            <div style={{ maxWidth: 1200, margin: "0 auto 32px", padding: "0 40px" }}>
-                <div style={{ background: "white", borderRadius: 20, padding: 36, boxShadow: "0 2px 12px rgba(0,0,0,0.05)" }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
-                        <h3 style={{ fontSize: 20, fontWeight: 700 }}>Top Colleges Offering This Course</h3>
-                        <a href="#" style={{ color: "#5b4eff", fontSize: 13, fontWeight: 600 }}>View All Colleges →</a>
-                    </div>
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(6,1fr)", gap: 16 }}>
-                        {COLLEGES.map(c => (
-                            <div key={c.name} className="college-card hover-card" style={{ padding: "20px 12px", border: "1.5px solid #f0f0f5", borderRadius: 14, textAlign: "center", cursor: "pointer", transition: "all 0.2s" }}>
-                                <div style={{ width: 56, height: 56, background: "linear-gradient(135deg,#eef0ff,#e8f5ff)", borderRadius: "50%", margin: "0 auto 12px", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24 }}>{c.icon || "🏛️"}</div>
-                                <div style={{ fontSize: 13, fontWeight: 700, color: "#1a1a2e", marginBottom: 4, lineHeight: 1.3 }}>{c.name}</div>
-                                <div style={{ fontSize: 11, color: "#9ca3af", marginBottom: 8 }}>{c.city}</div>
-                                <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 4 }}>
-                                    <Stars rating={c.rating} />
-                                    <span style={{ fontSize: 12, fontWeight: 600, color: "#374151" }}>{c.rating}</span>
+                        {/* Why Choose Us */}
+                        <div className="bg-indigo-900 rounded-3xl p-8 md:p-10 text-white relative overflow-hidden shadow-2xl">
+                            <div className="relative z-10">
+                                <h2 className="text-2xl font-bold mb-8 flex items-center gap-3">Why Choose {college.name}?</h2>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    {[
+                                        'NAAC A++ accredited with world-class infrastructure',
+                                        'Global exposure with 50+ international partnerships',
+                                        'Experienced faculty and research-driven learning',
+                                        'Vibrant campus life with 100+ student clubs',
+                                        'Excellent placement record with top recruiters',
+                                        'Industry-oriented programs and innovation hub'
+                                    ].map((item, idx) => (
+                                        <div key={idx} className="flex items-start gap-3">
+                                            <div className="mt-1 bg-green-500 rounded-full p-0.5"><CheckCircle size={14} className="text-white" /></div>
+                                            <p className="text-indigo-100 text-sm font-medium leading-relaxed">{item}</p>
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
-                        ))}
-                    </div>
-                </div>
-            </div>
-
-            {/* CTA BANNER */}
-            <div style={{ maxWidth: 1200, margin: "0 auto 48px", padding: "0 40px" }}>
-                <div style={{ background: "linear-gradient(135deg,#4f46e5 0%,#7c3aed 100%)", borderRadius: 20, padding: "36px 48px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
-                        <div style={{ fontSize: 56 }}>🎓</div>
-                        <div>
-                            <h3 style={{ fontSize: 22, fontWeight: 800, color: "white", marginBottom: 6 }}>Not sure which course is right for you?</h3>
-                            <p style={{ fontSize: 14, color: "rgba(255,255,255,0.8)", lineHeight: 1.5 }}>Get expert guidance from our counsellors and<br />make the right choice for your future.</p>
+                            <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-800 rounded-full -mr-32 -mt-32 opacity-20"></div>
+                            <div className="absolute bottom-0 left-0 w-32 h-32 bg-white rounded-full -ml-16 -mb-16 opacity-5"></div>
                         </div>
                     </div>
-                    <button className="btn-primary" style={{ padding: "14px 28px", background: "white", color: "#5b4eff", border: "none", borderRadius: 12, fontSize: 14, fontWeight: 700, cursor: "pointer", whiteSpace: "nowrap", transition: "all 0.2s", boxShadow: "0 4px 16px rgba(0,0,0,0.15)" }}>
-                        Talk to Counsellor →
-                    </button>
+
+                    {/* Right Sidebar */}
+                    <div className="space-y-8">
+                        <div className="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm sticky top-8">
+                            <h3 className="text-xl font-bold text-[#071B52] mb-8 flex items-center gap-3">
+                                <Info size={24} className="text-indigo-600" />
+                                Quick Information
+                            </h3>
+                            <div className="space-y-6">
+                                {[
+                                    { label: 'University Type', value: college.type || 'Deemed University', icon: <School size={18} /> },
+                                    { label: 'Established', value: college.established_year || '1992', icon: <Calendar size={18} /> },
+                                    { label: 'Approved By', value: college.approved_by || 'UGC, AICTE, NAAC A++', icon: <Award size={18} /> },
+                                    { label: 'Rankings', value: college.rankings || 'Among Top 20 Universities in India', icon: <Star size={18} /> },
+                                    { label: 'Website', value: college.website || 'www.college.ac.in', icon: <Globe size={18} />, isLink: true },
+                                    { label: 'Address', value: college.address || 'Patia, Bhubaneswar, Odisha', icon: <MapPin size={18} /> },
+                                ].map((info, idx) => (
+                                    <div key={idx} className="flex items-start gap-4 group">
+                                        <div className="mt-0.5 text-indigo-400 group-hover:text-indigo-600 transition-colors">{info.icon}</div>
+                                        <div className="flex-1">
+                                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{info.label}</p>
+                                            {info.isLink ? (
+                                                <a href={`https://${info.value}`} target="_blank" rel="noopener noreferrer" className="text-sm font-bold text-indigo-600 hover:underline flex items-center gap-1">
+                                                    {info.value}<ExternalLink size={12} />
+                                                </a>
+                                            ) : (
+                                                <p className="text-sm font-bold text-[#071B52] leading-tight mt-1">{info.value}</p>
+                                            )}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                            <div className="mt-10 pt-8 border-t border-gray-50 text-center">
+                                <p className="text-sm font-bold text-[#071B52] mb-4">Have Questions? We're here to help!</p>
+                                <div className="flex flex-col gap-3">
+                                    {/* Call Now — dials phone */}
+                                    <a href="tel:+919114422555" className="flex items-center justify-center gap-2 bg-indigo-600 text-white py-3 rounded-xl font-bold hover:bg-indigo-700 transition shadow-md active:scale-95">
+                                        <Phone size={18} />
+                                        Call Now
+                                    </a>
+                                    <a href="mailto:contact@admissionodisha.in" className="flex items-center justify-center gap-2 bg-white text-[#071B52] py-3 rounded-xl font-bold border border-gray-100 hover:bg-gray-50 transition active:scale-95">
+                                        <Mail size={18} />
+                                        Email Us
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-
         </div>
     );
-}
+};
+
+export default CollegeDetail;
