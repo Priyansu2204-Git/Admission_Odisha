@@ -383,5 +383,109 @@ class DashboardController extends Controller
         }
         return ['status' => 'success', 'data' => $courses];
     }
-}
+    public function actionGetUserActivity()
+    {
+        $search = Yii::$app->request->get('search', '');
+        $activityType = Yii::$app->request->get('activityType', 'All Activities');
+        $userFilter = Yii::$app->request->get('userFilter', 'All Users');
+        $page = (int)Yii::$app->request->get('page', 1);
+        $perPage = (int)Yii::$app->request->get('perPage', 10);
+        if ($page < 1) $page = 1;
+        if ($perPage < 1) $perPage = 10;
 
+        $query = (new \yii\db\Query())
+            ->select([
+                'ua.id',
+                'u.name',
+                'u.email',
+                'u.is_status as user_status',
+                'ua.activity_type',
+                'ua.ip_address',
+                'ua.created_at',
+                'f.name as field_name',
+                'c.name as course_name'
+            ])
+            ->from('user_activity ua')
+            ->leftJoin('users u', 'ua.user_id = u.id')
+            ->leftJoin('fields f', 'ua.field_id = f.id')
+            ->leftJoin('courses c', 'ua.course_id = c.id');
+
+        if (!empty($search)) {
+            $query->andWhere(['or', ['like', 'u.name', $search], ['like', 'u.email', $search]]);
+        }
+        if ($activityType !== 'All Activities') {
+            if ($activityType === 'Wishlist') {
+                $query->andWhere(['like', 'ua.activity_type', 'Wishlist']);
+            } elseif ($activityType === 'Enquiry') {
+                $query->andWhere(['like', 'ua.activity_type', 'Enquiry']);
+            } else {
+                $query->andWhere(['ua.activity_type' => $activityType]);
+            }
+        }
+        if ($userFilter === 'Active Users') {
+            $query->andWhere(['u.is_status' => 1]);
+        } elseif ($userFilter === 'Inactive Users') {
+            $query->andWhere(['u.is_status' => 0]);
+        }
+
+        $totalCount = $query->count();
+        $logs = $query->orderBy(['ua.created_at' => SORT_DESC])
+            ->offset(($page - 1) * $perPage)
+            ->limit($perPage)
+            ->all();
+
+        $formattedLogs = [];
+        foreach ($logs as $log) {
+            $details = '';
+            if (strpos($log['activity_type'], 'Login') !== false) {
+                $details = 'User logged in to the system';
+            } elseif (strpos($log['activity_type'], 'Wishlist') !== false) {
+                $item = $log['course_name'] ?? $log['field_name'] ?? 'item';
+                $details = "Action on Wishlist for $item";
+            } elseif (strpos($log['activity_type'], 'Enquiry') !== false) {
+                $details = 'Submitted an enquiry';
+            } elseif (strpos($log['activity_type'], 'Course') !== false) {
+                $details = 'Viewed course details for ' . ($log['course_name'] ?? 'Unknown');
+            } elseif (strpos($log['activity_type'], 'College') !== false) {
+                $details = 'Viewed college details';
+            } else {
+                $details = 'Performed ' . $log['activity_type'];
+            }
+
+            $formattedLogs[] = [
+                'id' => (int)$log['id'],
+                'name' => $log['name'] ?? 'Unknown User',
+                'email' => $log['email'] ?? '',
+                'type' => $log['activity_type'],
+                'details' => $details,
+                'ip' => $log['ip_address'] ?? 'Unknown',
+                'date' => date('d M Y, h:i A', strtotime($log['created_at']))
+            ];
+        }
+
+        $totalActivities = (new \yii\db\Query())->from('user_activity')->count();
+        $logins = (new \yii\db\Query())->from('user_activity')->where(['like', 'activity_type', 'Login'])->count();
+        $wishlist = (new \yii\db\Query())->from('user_activity')->where(['like', 'activity_type', 'Wishlist'])->count();
+        $enquiries = (new \yii\db\Query())->from('user_activity')->where(['like', 'activity_type', 'Enquiry'])->count();
+        $profile = (new \yii\db\Query())->from('user_activity')->where(['like', 'activity_type', 'Profile'])->count();
+
+        return [
+            'status' => 'success',
+            'data' => [
+                'stats' => [
+                    'totalActivities' => (int)$totalActivities,
+                    'logins' => (int)$logins,
+                    'wishlistActions' => (int)$wishlist,
+                    'enquiriesSubmitted' => (int)$enquiries,
+                    'profileUpdates' => (int)$profile
+                ],
+                'logs' => $formattedLogs,
+                'pagination' => [
+                    'total' => (int)$totalCount,
+                    'page' => $page,
+                    'perPage' => $perPage
+                ]
+            ]
+        ];
+    }
+}
