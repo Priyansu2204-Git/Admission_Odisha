@@ -89,10 +89,122 @@ const Navbar = () => {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 w-full z-[100] transition-all duration-300 bg-white/95 backdrop-blur-md border-b border-gray-100
-        ${scrolled ? "shadow-lg" : ""}`}
+        className={`fixed bottom-0 md:top-0 md:bottom-auto left-0 w-full z-[100] transition-all duration-300 bg-white/95 backdrop-blur-md border-t md:border-t-0 md:border-b border-gray-100
+        ${scrolled ? "shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] md:shadow-lg" : "shadow-[0_-2px_4px_-1px_rgba(0,0,0,0.05)] md:shadow-none"}`}
       >
-        <div className="max-w-[1280px] mx-auto flex items-center justify-between px-6 py-3">
+        {/* MOBILE MENU - Moved to top so it appears above bottom navbar */}
+        <div className={`md:hidden bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] ${mobileMenuOpen ? "block animate-slideUp" : "hidden"}`}>
+          <div className="flex flex-col py-4 max-h-[80vh] overflow-y-auto">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.name}
+                  to={link.path}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`px-6 py-3 text-sm transition-all duration-300 ${isActive(link.path)
+                      ? "text-[#6C4DF6] bg-gradient-to-r from-[#F5F3FF] to-[#F3E8FF] border-l-4 border-[#6C4DF6]"
+                      : "text-gray-600 hover:bg-gray-50"
+                    }`}
+                >
+                  {link.name}
+                </Link>
+              ))}
+
+              {user?.is_admin === 1 && (
+                <Link
+                  to="/dashboard"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`px-6 py-3 text-sm transition-all duration-300 ${isActive("/dashboard")
+                      ? "text-[#6C4DF6] bg-gradient-to-r from-[#F5F3FF] to-[#F3E8FF] border-l-4 border-[#6C4DF6]"
+                      : "text-gray-600 hover:bg-gray-50"
+                    }`}
+                >
+                  Dashboard
+                </Link>
+              )}
+              {token && (
+                <Link
+                  to="/wishlist"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`px-6 py-3 text-sm transition-all duration-300 ${
+                    isActive("/wishlist")
+                      ? "text-[#6C4DF6] bg-gradient-to-r from-[#F5F3FF] to-[#F3E8FF] border-l-4 border-[#6C4DF6]"
+                      : "text-gray-600 hover:bg-gray-50"
+                  }`}
+                >
+                  Wishlist {wishlist?.length > 0 && `(${wishlist.length})`}
+                </Link>
+              )}
+
+              {/* Divider */}
+              <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent my-2 mx-4"></div>
+
+              {/* Language */}
+              <div className="px-6 py-3">
+                <p className="text-xs text-gray-500 mb-2 flex items-center gap-1">
+                  <FaGlobe className="text-xs" /> Language
+                </p>
+                <div className="flex gap-2">
+                  {["EN", "Hindi", "Odia"].map((item) => (
+                    <button
+                      key={item}
+                      onClick={() => {
+                        const selected =
+                          item === "EN" ? "en" : item === "Hindi" ? "hi" : "od";
+
+                        setLang(selected);
+                        i18n.changeLanguage(selected);
+                        localStorage.setItem("language", selected);
+                        setMobileMenuOpen(false);
+                      }}
+                      className={`px-3 py-1 rounded-md text-sm transition-all duration-300 ${(item === "EN" && lang === "en") ||
+                          (item === "Hindi" && lang === "hi") ||
+                          (item === "Odia" && lang === "od")
+                          ? "bg-gradient-to-r from-[#6C4DF6] to-[#8B5CF6] text-white shadow-md"
+                          : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                        }`}
+                    >
+                      {item}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Auth Buttons */}
+              <div className="flex gap-3 px-6 py-3">
+                {token ? (
+                  <div className="flex flex-col w-full gap-2">
+                    <MyProfileButton
+                      variant="mobile"
+                      onClick={() => setMobileMenuOpen(false)}
+                    />
+                    <SettingsButton
+                      variant="mobile"
+                      onClick={() => setMobileMenuOpen(false)}
+                    />
+                    <LogoutButton
+                      variant="mobile"
+                      onClick={() => setMobileMenuOpen(false)}
+                    />
+                  </div>
+                ) : (
+                  <>
+                    <Link to="/login" className="flex-1">
+                      <button className="w-full border border-[#6C4DF6] text-[#6C4DF6] py-2 rounded-md hover:bg-[#F5F3FF] transition-all duration-300">
+                        Login
+                      </button>
+                    </Link>
+                    <Link to="/register" className="flex-1">
+                      <button className="w-full bg-gradient-to-r from-[#6C4DF6] to-[#8B5CF6] text-white py-2 rounded-md shadow-md hover:shadow-lg transition-all duration-300">
+                        Register
+                      </button>
+                    </Link>
+                  </>
+                )}
+            </div>
+          </div>
+        </div>
+
+        <div className="max-w-[1280px] mx-auto flex items-center justify-between px-6 py-3 w-full">
           {/* LOGO - Reduced gap */}
           <Link to="/" className="flex items-center gap-1 group">
             <img
@@ -279,138 +391,26 @@ const Navbar = () => {
           </button>
         </div>
 
-        {/* MOBILE MENU */}
-        <div className={`md:hidden bg-white/95 backdrop-blur-md border-t shadow-lg ${mobileMenuOpen ? "block animate-slideDown" : "hidden"}`}>
-          <div className="flex flex-col py-4">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.name}
-                  to={link.path}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={`px-6 py-3 text-sm transition-all duration-300 ${isActive(link.path)
-                      ? "text-[#6C4DF6] bg-gradient-to-r from-[#F5F3FF] to-[#F3E8FF] border-l-4 border-[#6C4DF6]"
-                      : "text-gray-600 hover:bg-gray-50"
-                    }`}
-                >
-                  {link.name}
-                </Link>
-              ))}
-
-              {user?.is_admin === 1 && (
-                <Link
-                  to="/dashboard"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={`px-6 py-3 text-sm transition-all duration-300 ${isActive("/dashboard")
-                      ? "text-[#6C4DF6] bg-gradient-to-r from-[#F5F3FF] to-[#F3E8FF] border-l-4 border-[#6C4DF6]"
-                      : "text-gray-600 hover:bg-gray-50"
-                    }`}
-                >
-                  Dashboard
-                </Link>
-              )}
-              {token && (
-                <Link
-                  to="/wishlist"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={`px-6 py-3 text-sm transition-all duration-300 ${
-                    isActive("/wishlist")
-                      ? "text-[#6C4DF6] bg-gradient-to-r from-[#F5F3FF] to-[#F3E8FF] border-l-4 border-[#6C4DF6]"
-                      : "text-gray-600 hover:bg-gray-50"
-                  }`}
-                >
-                  Wishlist {wishlist?.length > 0 && `(${wishlist.length})`}
-                </Link>
-              )}
-
-              {/* Divider */}
-              <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent my-2 mx-4"></div>
-
-              {/* Language */}
-              <div className="px-6 py-3">
-                <p className="text-xs text-gray-500 mb-2 flex items-center gap-1">
-                  <FaGlobe className="text-xs" /> Language
-                </p>
-                <div className="flex gap-2">
-                  {["EN", "Hindi", "Odia"].map((item) => (
-                    <button
-                      key={item}
-                      onClick={() => {
-                        const selected =
-                          item === "EN" ? "en" : item === "Hindi" ? "hi" : "od";
-
-                        setLang(selected);
-                        i18n.changeLanguage(selected);
-                        localStorage.setItem("language", selected);
-                        setMobileMenuOpen(false);
-                      }}
-                      className={`px-3 py-1 rounded-md text-sm transition-all duration-300 ${(item === "EN" && lang === "en") ||
-                          (item === "Hindi" && lang === "hi") ||
-                          (item === "Odia" && lang === "od")
-                          ? "bg-gradient-to-r from-[#6C4DF6] to-[#8B5CF6] text-white shadow-md"
-                          : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                        }`}
-                    >
-                      {item}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Auth Buttons */}
-              <div className="flex gap-3 px-6 py-3">
-                {token ? (
-                  <div className="flex flex-col w-full gap-2">
-                    <MyProfileButton
-                      variant="mobile"
-                      onClick={() => setMobileMenuOpen(false)}
-                    />
-                    <SettingsButton
-                      variant="mobile"
-                      onClick={() => setMobileMenuOpen(false)}
-                    />
-                    <LogoutButton
-                      variant="mobile"
-                      onClick={() => setMobileMenuOpen(false)}
-                    />
-                  </div>
-                ) : (
-                  <>
-                    <Link to="/login" className="flex-1">
-                      <button className="w-full border border-[#6C4DF6] text-[#6C4DF6] py-2 rounded-md hover:bg-[#F5F3FF] transition-all duration-300">
-                        Login
-                      </button>
-                    </Link>
-                    <Link to="/register" className="flex-1">
-                      <button className="w-full bg-gradient-to-r from-[#6C4DF6] to-[#8B5CF6] text-white py-2 rounded-md shadow-md hover:shadow-lg transition-all duration-300">
-                        Register
-                      </button>
-                    </Link>
-                  </>
-                )}
-            </div>
-          </div>
-        </div>
-
         {/* Animation */}
         <style>{`
-          @keyframes slideDown {
+          @keyframes slideUp {
             from {
               opacity: 0;
-              transform: translateY(-10px);
+              transform: translateY(10px);
             }
             to {
               opacity: 1;
               transform: translateY(0);
             }
           }
-          .animate-slideDown {
-            animation: slideDown 0.3s ease-out;
+          .animate-slideUp {
+            animation: slideUp 0.3s ease-out;
           }
         `}</style>
       </header>
 
-      {/* Spacer to prevent content from hiding under fixed navbar */}
-      <div className="h-[72px] md:h-[80px]"></div>
+      {/* Spacer to prevent content from hiding under fixed top navbar on desktop */}
+      <div className="hidden md:block h-[80px]"></div>
     </>
   );
 };
